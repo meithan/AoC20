@@ -13,7 +13,7 @@ with open(sys.argv[1]) as f:
 # -------------------------------------------------
 
 # Part 1
-
+# Just try all pairs
 for x in entries:
   for y in entries[1:]:
     if x + y == 2020:
@@ -25,7 +25,7 @@ print("Part 1:", sol1)
 # -------------------------------------------------
 
 # Part 2
-
+# Just try all triples
 for x in entries:
   for y in entries[1:]:
     for z in entries[2:]:
