@@ -17,6 +17,8 @@ with open(sys.argv[1]) as f:
     pswd = tokens[2]
 
     # Check the conditions for both parts
+    # Note that the ^ operator acts as a logical
+    # xor when used with booleans
     if a <= pswd.count(letter) <= b:
       count1 += 1
     if (pswd[a-1] == letter) ^ (pswd[b-1] == letter):
