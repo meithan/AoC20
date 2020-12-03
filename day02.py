@@ -1,10 +1,13 @@
 # Day 2: Password Philosophy
 
+import sys
+
 # ----------------------------------
 
-count1 = count2 = 0
+if len(sys.argv) == 1: sys.argv.append("day02.in")
 
-with open("day2.in") as f:
+count1 = count2 = 0
+with open(sys.argv[1]) as f:
   for line in f:
 
     # Split each line and parse its elements

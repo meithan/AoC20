@@ -4,6 +4,8 @@ import sys
 
 # =================================================
 
+if len(sys.argv) == 1: sys.argv.append("day01.in")
+
 # Read input
 entries = []
 with open(sys.argv[1]) as f:
