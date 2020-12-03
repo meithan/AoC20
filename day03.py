@@ -1,4 +1,4 @@
-# Day 3
+# Day 3: Toboggan Trajectory
 
 import sys
 
@@ -16,6 +16,8 @@ ncols = len(forest[0])
 
 # Count the trees encountered when going down the forest
 # following a slope that goes "dx right, dy down"
+# There's no need to actually copy the array values to the right,
+# one can use modulo to make the x coordinate wrap around.
 def count_trees(dx, dy):
   count = 0
   x = y = 0
