@@ -5,6 +5,15 @@ My solutions for [Advent of Code 2020](https://adventofcode.com/2020). In Python
 I'll be updating this as a sort of mini blog whenever I can, commenting on the daily problems.
 
 You can also check out our fancy [custom private leaderboard](https://meithan.net/AoC20/), with medals awarded to the fastest solvers. See (and download/fork!) the project [here](https://github.com/meithan/AoCBoard).
+
+___
+
+**Day 4**: Passport Processing
+
+7m 31s (#759) / 22m 29s (#579) - [code](https://github.com/meithan/AoC20/blob/main/day04.py)
+
+The kind of string matching problem for which [regular expressions](https://en.wikipedia.org/wiki/Regular_expression) ("regexes") were made (and Python has a nice [regex module](https://docs.python.org/3/library/re.html)). It was a nice little regex practice; I did have to look a couple of things up on the web. [regexr](https://regexr.com/) is an incredibly useful resource for that!
+
 ___
 
 **Day 3**: Toboggan Trajectory
