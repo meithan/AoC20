@@ -8,15 +8,15 @@ You can also check out our fancy [custom private leaderboard](https://meithan.ne
 
 ___
 
-**Day 4**: Passport Processing
+**Day 4**: [Passport Processing](https://adventofcode.com/2020/day/4)
 
 7m 31s (#759) / 22m 29s (#579) - [code](https://github.com/meithan/AoC20/blob/main/day04.py)
 
-The kind of string matching problem for which [regular expressions](https://en.wikipedia.org/wiki/Regular_expression) ("regexes") were made (and Python has a nice [regex module](https://docs.python.org/3/library/re.html)). It was a nice little regex practice; I did have to look a couple of things up on the web. [regexr](https://regexr.com/) is an incredibly useful resource for that!
+The kind of string matching problem for which [regular expressions](https://en.wikipedia.org/wiki/Regular_expression) ("regexes") were invented (and Python has a nice [regex module](https://docs.python.org/3/library/re.html)). It was a nice little regex practice; I did have to look a couple of things up on the web. [regexr](https://regexr.com/) is an incredibly useful resource for that!
 
 ___
 
-**Day 3**: Toboggan Trajectory
+**Day 3**: [Toboggan Trajectory](https://adventofcode.com/2020/day/3)
 
 4m 23s (#483) / 6m 39s (#295) - [code](https://github.com/meithan/AoC20/blob/main/day03.py)
 
@@ -25,7 +25,7 @@ Another easy one. Careful with mixing up the meaning of rows and column in these
 Not fast enough to make the top 100 on either star :/.
 ___
 
-**Day 2**: Password Philosophy
+**Day 2**: [Password Philosophy](https://adventofcode.com/2020/day/2)
 
 2m 47s (#130) / 4m 02s (**#69!**) - [code](https://github.com/meithan/AoC20/blob/main/day02.py)
 
@@ -35,7 +35,7 @@ Python's great string manipulation methods (like [split](https://docs.python.org
 
 ___
 
-**Day 1**: Report Repair
+**Day 1**: [Report Repair](https://adventofcode.com/2020/day/1)
 
 7m 08s (#293) / 8m 06s (#283) - [code](https://github.com/meithan/AoC20/blob/main/day01.py)
 
