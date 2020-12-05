@@ -6,9 +6,11 @@ I'll be updating this as a sort of mini blog whenever I can, commenting on the d
 
 You can also check out our fancy [custom private leaderboard](https://meithan.net/AoC20/), with medals awarded to the fastest solvers. See (and download/fork!) the project [here](https://github.com/meithan/AoCBoard).
 
+Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5)
+
 ___
 
-**Day 5**: [Binary Boarding](https://adventofcode.com/2020/day/5)
+**Day 5**: [Binary Boarding](https://adventofcode.com/2020/day/5)<a name="day5"></a>
 
 28m 50s (#5221) / 33m 28s (#4336) - [code](https://github.com/meithan/AoC20/blob/main/day05.py)
 
@@ -28,7 +30,7 @@ I started this one about 20 minutes late, so I only got 2nd place on our [privat
 
 ___
 
-**Day 4**: [Passport Processing](https://adventofcode.com/2020/day/4)
+**Day 4**: [Passport Processing](https://adventofcode.com/2020/day/4)<a name="day4"></a>
 
 7m 31s (#759) / 22m 29s (#579) - [code](https://github.com/meithan/AoC20/blob/main/day04.py)
 
@@ -36,7 +38,7 @@ The kind of string matching problem for which [regular expressions](https://en.w
 
 ___
 
-**Day 3**: [Toboggan Trajectory](https://adventofcode.com/2020/day/3)
+**Day 3**: [Toboggan Trajectory](https://adventofcode.com/2020/day/3)<a name="day3"></a>
 
 4m 23s (#483) / 6m 39s (#295) - [code](https://github.com/meithan/AoC20/blob/main/day03.py)
 
@@ -45,7 +47,7 @@ Another easy one. Careful with mixing up the meaning of rows and column in these
 Not fast enough to make the top 100 on either star :/.
 ___
 
-**Day 2**: [Password Philosophy](https://adventofcode.com/2020/day/2)
+**Day 2**: [Password Philosophy](https://adventofcode.com/2020/day/2)<a name="day2"></a>
 
 2m 47s (#130) / 4m 02s (**#69!**) - [code](https://github.com/meithan/AoC20/blob/main/day02.py)
 
@@ -55,7 +57,7 @@ Python's great string manipulation methods (like [split](https://docs.python.org
 
 ___
 
-**Day 1**: [Report Repair](https://adventofcode.com/2020/day/1)
+**Day 1**: [Report Repair](https://adventofcode.com/2020/day/1)<a name="day1"></a>
 
 7m 08s (#293) / 8m 06s (#283) - [code](https://github.com/meithan/AoC20/blob/main/day01.py)
 
