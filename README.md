@@ -8,6 +8,26 @@ You can also check out our fancy [custom private leaderboard](https://meithan.ne
 
 ___
 
+**Day 5**: [Binary Boarding](https://adventofcode.com/2020/day/5)
+
+28m 50s (#5221) / 33m 28s (#4336) - [code](https://github.com/meithan/AoC20/blob/main/day05.py)
+
+It is straightforward to simply code the [binary search](https://en.wikipedia.org/wiki/Binary_search_algorithm) process described in the problem. Careful with a possible [off-by-one error](https://en.wikipedia.org/wiki/Off-by-one_error) in how the bounds are updated.
+
+However a smarter solution is realizing that this process is really just [counting in binary](https://en.wikipedia.org/wiki/Binary_number#Counting_in_binary). Each bit represents a partition into halves, with the rightmost bits corresponding to larger partitions. For instance, for the left-right column selection we have:
+
+<pre>      L--             L--
+  LL-     LR-     RL-     RR-
+LLL LLR LRL LRR RLL RLR RRL RRR
+000 001 010 011 100 101 110 111
+ 0   1   2   3   4   5   6   7</pre>
+
+So simply replacing L by 0 and R by 1 (and F by 0 and B by 1 for the rows), and converting the resulting binary number into decimal also (e.g. `int("0101100", 2)`) yields the correct row or column.
+
+I started this one about 20 minutes late, so I only got 2nd place on our [private leaderboard](https://meithan.net/AoC20). Oh well.
+
+___
+
 **Day 4**: [Passport Processing](https://adventofcode.com/2020/day/4)
 
 7m 31s (#759) / 22m 29s (#579) - [code](https://github.com/meithan/AoC20/blob/main/day04.py)
