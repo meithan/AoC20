@@ -8,12 +8,12 @@ import sys
 if len(sys.argv) == 1:
   sys.argv.append(sys.argv[0].replace(".py", ".in"))
 
-# A class for a bag of a certain color, its contents and its "uber bags"
-# (the other bags that contain it)
+# A class for a bag of a certain color, its contents (which bags it contains)
+# and its "parent bags" (which bags contain it)
 class Bag:
   def __init__(self, color):
     self.color = color
-    self.uber_bags = set()
+    self.parents = set()
     self.contents = {}
   def __repr__(self):
     return "<{}>".format(self.color)
@@ -30,7 +30,8 @@ class Bag:
 
 # ------------------------------------
 
-# Read bags from the input, specifying the relationships between them
+# Read bags from the input, building a graph of relationships between them
+# As a bag can have multiple parents, this is not a tree but a directed graph
 bags = {}
 with open(sys.argv[1]) as f:
   for line in f:
@@ -55,7 +56,7 @@ with open(sys.argv[1]) as f:
       else:
         other_bag = bags[other_color]
       bag.contents[other_bag] = number
-      other_bag.uber_bags.add(bag)
+      other_bag.parents.add(bag)
 
     if "no other bags" in line:
       continue
@@ -63,14 +64,14 @@ with open(sys.argv[1]) as f:
 # ------------------------------------
 # Part 1
 
-# Go up grom the shiny gold bag's uber bags, remember add all seen
+# Walk up the graph from the shiny gold bag, remembering all seen bags
 seen = set()
-to_search = [x for x in bags["shiny gold"].uber_bags]
+to_search = [x for x in bags["shiny gold"].parents]
 while len(to_search) > 0:
   bag = to_search.pop()
   if bag.color not in seen:
     seen.add(bag.color)
-  for other_bag in bag.uber_bags:
+  for other_bag in bag.parents:
     to_search.append(other_bag)
 
 print("Part 1:", len(seen))
@@ -78,7 +79,7 @@ print("Part 1:", len(seen))
 # ------------------------------------
 # Part 2
 
-# Recursively compute the total number of bags in the shiny gold bag
+# Recursively compute the total number of bags contained in the shiny gold bag
 tot_bags = bags["shiny gold"].tot_bags()
 
 print("Part 2:", tot_bags)
