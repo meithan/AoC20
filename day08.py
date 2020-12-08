@@ -1,4 +1,4 @@
-# Day 8:
+# Day 8: Handheld Halting
 
 import sys
 
@@ -27,7 +27,7 @@ def exec_program(program):
 
     # An infinite loop occurs if we come back to a previously
     # executed instruction (since their effect does not depend
-    # on the value of the accumuator)
+    # on the value of the accumulator)
     if idx in prev_idx:
       # print("infinite loop!")
       return 1, acc
