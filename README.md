@@ -24,7 +24,7 @@ ___
 
 26m 22s (#1979) / 54m 55s (#2907) - [code](https://github.com/meithan/AoC20/blob/main/day07.py)
 
-This was a bit more difficult than previous problems. The relationships between the bag types (color/pattern), i.e. which bag holds which bags, can be represented as a weighted [directed graph](https://en.wikipedia.org/wiki/Directed_graph). For the test input provided in the problem statement this looks like this:
+This was a bit more difficult than previous problems. The relationships between the bag types (color/pattern), i.e. which bag holds which bags, can be represented as a weighted [directed graph](https://en.wikipedia.org/wiki/Directed_graph). For the test input provided in the problem statement this looks like this (plotted with [networkx](https://networkx.org/) - coce [here](https://github.com/meithan/AoC20/blob/main/day07_viz.py)):
 
 ![graph](day07_test1.png)
 
@@ -32,9 +32,9 @@ Directed edges point from a bag type to the bag types it contains, and weights i
 
 The Bag class represents each bag type. Its "contents" are the bag types it can contain (a dict having the bag "color" as key and the number of bags as value), and we also keep track of its "parents", i.e. bags that can contain it (which can be multiple; hence, this is not a [tree](https://en.wikipedia.org/wiki/Tree_(data_structure))).
 
-Then it's just a matter of "walking" this graph, starting from the shiny gold bag type. In Part 1, we walk "up" the three, following the parents until no more parents are left to follow. We count how many bag types are encountered.
+Then it's just a matter of "walking" this graph, starting from the shiny gold bag type. In Part 1, we walk "up" the graph, successively following the parents until no more parents are left to follow. We count how many bag types are encountered in the process
 
-For Part 2, we walk "down" the three [recursively](https://en.wikipedia.org/wiki/Recursion_(computer_science)) from the shiny gold bag. The number of total contained bags is, in general, equal to the number of directly contained bag types plus the number of each contained bag type times the total number of contained bags in *that* bag type. Hence the calculation naturally recurses, until bags with no contents are reached.
+For Part 2, we compute the total number of contained bags [recursively](https://en.wikipedia.org/wiki/Recursion_(computer_science)) starting from the shiny gold bag. The number of total contained bags is, in general, equal to the number of directly contained bag types plus the number of each contained bag type times the total number of contained bags in *that* bag type. Hence the calculation naturally recurses, walking "down" the graph, until all bags with no contents are reached.
 
 It wasn't really a complicated problem, but a bit more involved than the previous ones. Knowing AoC, I was initially worried about the phrase "be sure to count all of the bags, even if the nesting becomes topologically impractical". It could mean that the graph contained cycles or some other twist. But in the end it did not.
 
