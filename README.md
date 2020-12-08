@@ -12,11 +12,11 @@ ___
 
 **Day 8**: [Handheld Halting](https://adventofcode.com/2020/day/8)<a name="day8"></a>
 
-5m 7s (#462) / 11m 33s (#2413) - [code](https://github.com/meithan/AoC20/blob/main/day08.py)
+5m 7s (#462) / 11m 33s (#413) - [code](https://github.com/meithan/AoC20/blob/main/day08.py)
 
 Pretty straightforward. The program exits if we come back to a previously executed instruction; this *will* result in an infinite loop since the effect of the instructions does not depend on the value of the accumulator.
 
-For Part 2 we simply execute modified version of the program, changing one jmp or nop instruction each time, and stop when that leads to a normal program termination.
+For Part 2 we simply execute modified versions of the program, changing one jmp or nop instruction at a time, and stop when execution leads to normal program termination.
 
 ___
 
@@ -37,6 +37,8 @@ Then it's just a matter of "walking" this graph, starting from the shiny gold ba
 For Part 2, we walk "down" the three [recursively](https://en.wikipedia.org/wiki/Recursion_(computer_science)) from the shiny gold bag. The number of total contained bags is, in general, equal to the number of directly contained bag types plus the number of each contained bag type times the total number of contained bags in *that* bag type. Hence the calculation naturally recurses, until bags with no contents are reached.
 
 It wasn't really a complicated problem, but a bit more involved than the previous ones. Knowing AoC, I was initially worried about the phrase "be sure to count all of the bags, even if the nesting becomes topologically impractical". It could mean that the graph contained cycles or some other twist. But in the end it did not.
+
+I'm not happy with my solution times. I even lost one of the gold models.
 
 ___
 
