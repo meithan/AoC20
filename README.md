@@ -24,7 +24,7 @@ ___
 
 26m 22s (#1979) / 54m 55s (#2907) - [code](https://github.com/meithan/AoC20/blob/main/day07.py)
 
-This was a bit more difficult than previous problems. The relationships between the bag types (color/pattern), i.e. which bag holds which bags, can be represented as a weighted [directed graph](https://en.wikipedia.org/wiki/Directed_graph). For the test input provided in the problem statement this looks like this (plotted with [networkx](https://networkx.org/) - coce [here](https://github.com/meithan/AoC20/blob/main/day07_viz.py)):
+This was a bit more difficult than previous problems. The relationships between the bag types (color/pattern), i.e. which bag holds which bags, can be represented as a weighted [directed graph](https://en.wikipedia.org/wiki/Directed_graph). For the test input provided in the problem statement this looks like this (plotted with [networkx](https://networkx.org/) - code [here](https://github.com/meithan/AoC20/blob/main/day07_viz.py)):
 
 ![graph](day07_test1.png)
 
