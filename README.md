@@ -41,7 +41,7 @@ After checking that this also worked for the second, larger test input, I tried 
 
 *A more direct mathematical solution*
 
-After solving the problem I investigated what solutions there were to the general problem, as this is graph theory problem that most certainly been studied extensively. And I did find an "analytical" solution that exploits a ([property of the adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix#Matrix_powers)) that I dimly recall:
+After solving the problem I investigated what solutions there were to the general problem, as this is graph theory problem that most certainly been studied extensively. And I did find an "analytical" solution that exploits a [property of the adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix#Matrix_powers) that I dimly recalled:
 
 > "If A is the adjacency matrix of the directed or undirected graph G, then the matrix A^n (i.e., the matrix product of n copies of A) has an interesting interpretation: the element (i, j) gives the number of (directed or undirected) walks of length n from vertex i to vertex j."
 
