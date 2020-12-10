@@ -6,7 +6,46 @@ I'll be updating this as a sort of mini blog whenever I can, commenting on the d
 
 You can also check out our fancy [custom private leaderboard](https://meithan.net/AoC20/), with medals awarded to the fastest solvers. See (and download/fork!) the project [here](https://github.com/meithan/AoCBoard).
 
-Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9)
+Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10)
+
+___
+
+**Day 10**: [Adapter Array](https://adventofcode.com/2020/day/10)<a name="day10"></a>
+
+9m 16s (#1955) / 53m 35s (#2905) - [code](https://github.com/meithan/AoC20/blob/main/day10.py)
+
+Ah, the first problem where the naive brute-force solution won't work. I've been waiting for you.
+
+Part 1 was straightforward. But again I got snatched the gold medal by coding too slow. It was like 10 lines of code! Anyway.
+
+Part 2 is where things got interesting. The outlet, adapters and device can be understood as a directed graph: there's an edge from a to b if 1 <= joltage(b) - joltage(a) <= 3. Then, the problem was basically to count the number of simple paths from the start node (the outlet) to the end node (the device).
+
+The [branching factor](https://en.wikipedia.org/wiki/Branching_factor) isn't too big --at most 3 nodes are reachable from any given node-- and the number of adapters in my input (96) was not huge. So, despite the warning in the problem statement that there could be trillions of paths, I decided to try the naive brute-force approach anyway: a [traversal](https://en.wikipedia.org/wiki/Graph_traversal) of the graph from start to end, branching the partial paths when there were multiple options.
+
+After coding it and checking it worked with the given test inputs, I ran it on the actual input ... A couple minutes later it was still running and the program was beginning to eat up my RAM, storing all the partial paths. [Turns out](https://cs.stackexchange.com/questions/423/how-hard-is-counting-the-number-of-simple-paths-between-two-nodes-in-a-directed) that this problem is [#P-complete](https://en.wikipedia.org/wiki/%E2%99%AFP-complete), the counting-problem analog of [NP-complete](https://en.wikipedia.org/wiki/NP-completeness).
+
+Then I noticed something in the graph I had drawn on paper with the smaller test input: when two consecutive adapters are separated by a value of 3, there can only be ONE path between them. These 'transitions' separate parts of the graph into independent sub-problems, and counting the number of paths in each sub-problem is enough to get the global number of paths.
+
+For instance, for the first test input, the list of adapters, including the outlet and device, is:
+
+  ``[0, 1, 4, 5, 6, 7, 10, 11, 12, 15, 16, 19, 22]``
+
+and the transition points are at 1->4, 7->10, 12->15, 16->19 and 19->22; all paths must pass through these and there is only a single path between them. Hence, the sub-problems to be solved are:
+
+  ``[0, 1] [4, 5, 6, 7] [10, 11, 12] [15, 16] [19] [22]``
+
+Thus, we compute the number of paths within each sub-problem --which are,
+hopefully, much smaller than the whole problem, which turned out to the case-- and multiply the results together. Then that is the answer. This is a [divide-and-conquer](https://en.wikipedia.org/wiki/Divide-and-conquer_algorithm) strategy.
+
+After checking that this also worked for the second, larger test input, I tried the actual input. And lo and behold, in a fraction of a second all the sub-problems were solved and the final answer was correct! Yay! The largest sub-problem in the input turned out to have only 5 nodes, so solving them all by brute-force traversal was very fast.
+
+*A more direct mathematical solution*
+
+After solving the problem I investigated what solutions there were to the general problem, as this is graph theory problem that most certainly been studied extensively. And I did find an "analytical" [solution](https://stackoverflow.com/questions/4635402/number-of-paths-in-graph) that exploits one graph-theory result that I dimly recall:
+
+> Let A be the adjacency matrix of a graph G. Then A^n (i.e. A multiplied n times with itself) has the following interesting property: The entry at position (i,j) of A^n equals the number of different paths of length n from vertex i to vertex j.
+
+Thus, one can construct the adjacency matrix of the graph of adapters, compute the successive A^k for k in [1,N] (using numpy's [matmul](https://numpy.org/doc/stable/reference/generated/numpy.matmul.html)), and in each case simply accumulate the value of A^k_{1,N}, since that would the number of k-length paths between the first and last nodes. And, sure, enough, this [works](https://github.com/meithan/AoC20/blob/main/day10_alt.py) too.
 
 ___
 
