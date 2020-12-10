@@ -41,11 +41,11 @@ After checking that this also worked for the second, larger test input, I tried 
 
 *A more direct mathematical solution*
 
-After solving the problem I investigated what solutions there were to the general problem, as this is graph theory problem that most certainly been studied extensively. And I did find an "analytical" [solution](https://stackoverflow.com/questions/4635402/number-of-paths-in-graph) that exploits one graph-theory result that I dimly recall:
+After solving the problem I investigated what solutions there were to the general problem, as this is graph theory problem that most certainly been studied extensively. And I did find an "analytical" solution that exploits a ([property of the adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix#Matrix_powers)) that I dimly recall:
 
-> Let A be the adjacency matrix of a graph G. Then A^n (i.e. A multiplied n times with itself) has the following interesting property: The entry at position (i,j) of A^n equals the number of different paths of length n from vertex i to vertex j.
+> "If A is the adjacency matrix of the directed or undirected graph G, then the matrix A^n (i.e., the matrix product of n copies of A) has an interesting interpretation: the element (i, j) gives the number of (directed or undirected) walks of length n from vertex i to vertex j."
 
-Thus, one can construct the adjacency matrix of the graph of adapters, compute the successive A^k for k in [1,N] (using numpy's [matmul](https://numpy.org/doc/stable/reference/generated/numpy.matmul.html)), and in each case simply accumulate the value of A^k_{1,N}, since that would the number of k-length paths between the first and last nodes. And, sure, enough, this [works](https://github.com/meithan/AoC20/blob/main/day10_alt.py) too.
+Thus, one can construct the adjacency matrix of the graph of adapters, compute the successive A^k for k in [1,N] (using numpy's [matmul](https://numpy.org/doc/stable/reference/generated/numpy.matmul.html)), and in simply accumulate the values of A^k_{1,N}, since that would be the number of k-length paths between the first and last nodes. And, sure enough, this [works too](https://github.com/meithan/AoC20/blob/main/day10_alt.py).
 
 ___
 
