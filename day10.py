@@ -1,4 +1,4 @@
-# Day 10:
+# Day 10: Adapter Array
 
 from collections import deque
 import sys
