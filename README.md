@@ -26,7 +26,7 @@ After coding it and checking it worked with the given test inputs, I ran it on t
 
 Then I noticed something in the graph I had drawn on paper with the smaller test input: when two consecutive adapters are separated by a value of 3, there can only be ONE path between them. These 'transitions' separate parts of the graph into independent sub-problems, and counting the number of paths in each sub-problem is enough to get the global number of paths.
 
-For instance, for the first test input, the list of adapters, including the outlet and device, is:
+For instance, for the first test input, the list of adapters including the outlet and device, is:
 
   ``[0, 1, 4, 5, 6, 7, 10, 11, 12, 15, 16, 19, 22]``
 
@@ -34,18 +34,17 @@ and the transition points are at 1->4, 7->10, 12->15, 16->19 and 19->22; all pat
 
   ``[0, 1] [4, 5, 6, 7] [10, 11, 12] [15, 16] [19] [22]``
 
-Thus, we compute the number of paths within each sub-problem --which are,
-hopefully, much smaller than the whole problem, which turned out to the case-- and multiply the results together. Then that is the answer. This is a [divide-and-conquer](https://en.wikipedia.org/wiki/Divide-and-conquer_algorithm) strategy.
+So we can use the graph traversal algorithm to compute the numberof paths within each sub-problem --which are, hopefully, much smaller than the whole problem, which turned out to the case-- and multiply the results together. Then that is the answer. This is a [divide-and-conquer](https://en.wikipedia.org/wiki/Divide-and-conquer_algorithm) strategy.
 
 After checking that this also worked for the second, larger test input, I tried the actual input. And lo and behold, in a fraction of a second all the sub-problems were solved and the final answer was correct! Yay! The largest sub-problem in the input turned out to have only 5 nodes, so solving them all by brute-force traversal was very fast.
 
 *A more direct mathematical solution*
 
-After solving the problem I investigated what solutions there were to the general problem, as this is graph theory problem that most certainly been studied extensively. And I did find an "analytical" solution that exploits a [property of the adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix#Matrix_powers) that I dimly recalled:
+After solving the problem I investigated what general solutions exist, as this sounds like a graph theory problem that probably has been studied extensively. And I did find a more mathematical solution that exploits a [property of the adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix#Matrix_powers) that I dimly recalled:
 
 > "If A is the adjacency matrix of the directed or undirected graph G, then the matrix A^n (i.e., the matrix product of n copies of A) has an interesting interpretation: the element (i, j) gives the number of (directed or undirected) walks of length n from vertex i to vertex j."
 
-Thus, one can construct the adjacency matrix of the graph of adapters, compute the successive A^k for k in [1,N] (using numpy's [matmul](https://numpy.org/doc/stable/reference/generated/numpy.matmul.html)), and in simply accumulate the values of A^k_{1,N}, since that would be the number of k-length paths between the first and last nodes. And, sure enough, this [works too](https://github.com/meithan/AoC20/blob/main/day10_alt.py).
+One can construct the adjacency matrix of the graph of adapters, compute the successive A^k for k in [1,N] (using numpy's [matmul](https://numpy.org/doc/stable/reference/generated/numpy.matmul.html)), and simply accumulate the value of A^k_{1,N}, since that would be the number of k-length paths between the first and last nodes. And, sure enough, this [works too](https://github.com/meithan/AoC20/blob/main/day10_alt.py).
 
 ___
 
