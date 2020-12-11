@@ -6,7 +6,17 @@ I'll be updating this as a sort of mini blog whenever I can, commenting on the d
 
 You can also check out our fancy [custom private leaderboard](https://meithan.net/AoC20/), with medals awarded to the fastest solvers. See (and download/fork!) the project [here](https://github.com/meithan/AoCBoard).
 
-Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10)
+Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11)
+
+___
+
+**Day 11**: [Seating System](https://adventofcode.com/2020/day/11)<a name="day11"></a>
+
+13m 38s (#437) / 40m 8s (#1534) - [code](https://github.com/meithan/AoC20/blob/main/day11.py)
+
+Another straightforward coding problem. My Part 1 time wasn't that bad (top 500), but I took way too long to complete Part 2, which was really only a small modification of Part 1, due to little bugs (typos, forgetting to re-start from the original grid, [off-by-one](https://en.wikipedia.org/wiki/Off-by-one_error) errors, ...).
+
+Only things worth mentioning are (1) list equality in Python is recursive, so it's OK to directly compare multi-dimensional lists of primitive types (but careful with lists containing user-defined objects), and (2) you can use the [copy.deepcopy](https://docs.python.org/3/library/copy.html) function to easily do "full copies" (i.e. recursive copies) of lists (since doing list_B = list_A just makes list_B refer to list_A, so modifying list_B *will* modify list_A, which is usually not what you want).
 
 ___
 
