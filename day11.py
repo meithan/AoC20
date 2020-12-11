@@ -8,11 +8,13 @@ import sys
 if len(sys.argv) == 1:
   sys.argv.append(sys.argv[0].replace(".py", ".in"))
 
+# Load grid from input
 orig_grid = []
 with open(sys.argv[1]) as f:
   for line in f:
     orig_grid.append(list(line.strip()))
 
+# We keep orig_grid intact
 grid = copy.deepcopy(orig_grid)
 
 NX = len(grid)
@@ -26,6 +28,9 @@ def show_grid(grid):
 # ------------------------------------
 # Part 1
 
+# Advances the grid by one step, with rules for Part 1
+# Just check how many neighbors each cell has and apply the rules
+# Note that we create a new grid instead of overwriting the previous one
 def step_part1(grid):
 
   new_grid = [[""]*NY for _ in range(NX)]
@@ -52,12 +57,14 @@ def step_part1(grid):
 
   return new_grid
 
+# Keep evolving the grid until the grid stops changing
 while True:
   new_grid = step_part1(grid)
   if new_grid == grid:
     break
   grid = new_grid
 
+# Count how many occupied seats are in the final grid
 count1 = 0
 for i in range(NX):
   for j in range(NY):
@@ -69,6 +76,8 @@ print("Part 1:", count1)
 # ------------------------------------
 # Part 2
 
+# For Part 2, we have to look for seats (both occupied and unoccupied) in
+# lines "radiating out" of the seat under analysis (in the eight directions)
 def step_part2(grid):
 
   new_grid = [[""]*NY for _ in range(NX)]
@@ -77,17 +86,15 @@ def step_part2(grid):
 
       num_occupied = 0
       for di, dj in [(1,0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, 1), (1, -1), (-1, -1)]:
-        ni = i
-        nj = j
-        while True:
-          ni += di; nj += dj
-          if not (0 <= ni < NX and 0 <= nj < NY):
-            break
-          elif grid[ni][nj] == "L":
+        ni = i + di
+        nj = j + dj
+        while 0 <= ni < NX and 0 <= nj < NY:
+          if grid[ni][nj] == "L":
             break
           elif grid[ni][nj] == "#":
             num_occupied += 1
             break
+          ni += di; nj += dj
 
       if grid[i][j] == "L" and num_occupied == 0:
         new_grid[i][j] = "#"
@@ -100,14 +107,17 @@ def step_part2(grid):
 
   return new_grid
 
+# Be sure to start from the original grid
 grid = copy.deepcopy(orig_grid)
 
+# Iterate until stability
 while True:
   new_grid = step_part2(grid)
   if new_grid == grid:
     break
   grid = new_grid
 
+# Count occupied seats
 count2 = 0
 for i in range(NX):
   for j in range(NY):
