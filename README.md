@@ -34,17 +34,23 @@ The [branching factor](https://en.wikipedia.org/wiki/Branching_factor) isn't too
 
 After coding it and checking it worked with the given test inputs, I ran it on the actual input ... A couple minutes later it was still running and the program was beginning to eat up my RAM, storing all the partial paths. [Turns out](https://cs.stackexchange.com/questions/423/how-hard-is-counting-the-number-of-simple-paths-between-two-nodes-in-a-directed) that the general problem is [#P-complete](https://en.wikipedia.org/wiki/%E2%99%AFP-complete), the counting-problem analog of [NP-complete](https://en.wikipedia.org/wiki/NP-completeness).
 
-Then I noticed something in the graph I had drawn on paper with the smaller test input: when two consecutive adapters are separated by a value of 3, there can only be ONE path between them. These 'transitions' separate parts of the graph into independent sub-problems, and counting the number of paths in each sub-problem is enough to get the global number of paths.
+Then I noticed something in the graph I had drawn on paper with the smaller test input (see the plot below): when two consecutive adapters are separated by a value of 3, there can only be ONE path between them. These 'junctions' separate parts of the graph into independent sub-problems, and counting the number of paths in each sub-problem is enough to get the global number of paths (just multiply together the number of paths in each sub-problem).
 
 For instance, for the first test input, the list of adapters including the outlet and device, is:
 
   ``[0, 1, 4, 5, 6, 7, 10, 11, 12, 15, 16, 19, 22]``
 
-and the transition points are at 1->4, 7->10, 12->15, 16->19 and 19->22; all paths must pass through these and there is only a single path between them. Hence, the sub-problems to be solved are:
+and the junction points are `1->4`, `7->10`, `12->15`, `16->19` and `19->22`; all paths must pass through these and there is only a single path between them. Hence, the sub-problems to be solved are:
 
   ``[0, 1] [4, 5, 6, 7] [10, 11, 12] [15, 16] [19] [22]``
 
-So we can use the graph traversal algorithm to compute the numberof paths within each sub-problem --which are, hopefully, much smaller than the whole problem, which turned out to the case-- and multiply the results together. Then that is the answer. This is a [divide-and-conquer](https://en.wikipedia.org/wiki/Divide-and-conquer_algorithm) strategy.
+Graphically, this looks like this:
+
+![graph](day10_viz.png)
+
+So, the strategy is to use the graph traversal algorithm to compute the number of paths *within each sub-problem* --which are, hopefully, much smaller than the whole problem and thus much faster to solve, which turned out to the case-- and multiply the results together. Then that is the answer. This is a [divide-and-conquer](https://en.wikipedia.org/wiki/Divide-and-conquer_algorithm) strategy.
+
+For the test input shown, the number of paths in each sub-problem is that indicated in the plot, and the total number of paths is hence `1 * 4 * 2 * 1 * 1 = 8`, which is the correct answer.
 
 After checking that this also worked for the second, larger test input, I tried the actual input. And lo and behold, in a fraction of a second all the sub-problems were solved and the final answer was correct! Yay! The largest sub-problem in the input turned out to have only 5 nodes, so solving them all by brute-force traversal was very fast.
 
