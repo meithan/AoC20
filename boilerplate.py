@@ -16,11 +16,15 @@ with open(sys.argv[1]) as f:
 
 
 
-print("Part 1:")
+ans1 = 0
+
+print("Part 1:", ans1)
 
 # ------------------------------------
 # Part 2
 
 
 
-print("Part 2:")
+ans2 = 0
+
+print("Part 2:", ans2)
