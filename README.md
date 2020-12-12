@@ -6,7 +6,19 @@ I'll be updating this as a sort of mini blog whenever I can, commenting on the d
 
 You can also check out our fancy [custom private leaderboard](https://meithan.net/AoC20/), with medals awarded to the fastest solvers. See (and download/fork!) the project [here](https://github.com/meithan/AoCBoard).
 
-Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11)
+Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12)
+
+___
+
+**Day 12**: [Rain Risk](https://adventofcode.com/2020/day/12)<a name="day12"></a>
+
+10m 25s (#884) / 28m 33s (#1433) - [code](https://github.com/meithan/AoC20/blob/main/day12.py)
+
+A simple problem, with the solutions to the two parts almost the same.
+
+The direction the ship points (in Part 1), the direction to the waypoint (in Part 2), and the position of the ship itself can all be thought as 2D vectors, so thinking in terms of vector addition and [rotation matrices](https://en.wikipedia.org/wiki/Rotation_matrix) really makes things (and code) clearer.
+
+Lost some time due to usual stupid bugs and because I initially coded the solution with sines and cosines thinking of arbitrary angles (which was obviously not needed), and that introduced a truncation error somewhere that made by first submission for Part 2 incorrect. Just [pass the salt](https://xkcd.com/974/)!
 
 ___
 
