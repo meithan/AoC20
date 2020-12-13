@@ -36,7 +36,7 @@ for d,p in enumerate(buses):
     numbers.append(int(p))
     delays.append(d)
 
-# Finds smallest x such that a*p1 = x + d1, b*p2 = x + d2
+# Finds smallest x such that a*p1 + d1 = x, b*p2 = x + d2
 def offset(p1, d1, p2, d2):
   a = 1
   while True:
