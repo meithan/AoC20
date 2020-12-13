@@ -54,8 +54,8 @@ This, finally, translates into a succinct and fast (for the sizes of the numbers
 Then for the rest of the numbers p2 and their offset d2:
   Solve the problem for the pair (p1, d1) and (p2, d2), that is, find x such that p1*a + d1 = x and p2*b = x + d2, using the algorithm above:
     for a = 1, 2, 3, ...:
-      x = 221*a + 102
-      If (x+3) % 19 == 0, stop; else, continue
+      x = p1*a + d1
+      If (x+d2) % p2 == 0, stop; else, continue
   Set p1 = p1*p2 and d1 = x; continue with next number
 </pre>
 
