@@ -6,7 +6,64 @@ I'll be updating this as a sort of mini blog whenever I can, commenting on the d
 
 You can also check out our fancy [custom private leaderboard](https://meithan.net/AoC20/), with medals awarded to the fastest solvers. See (and download/fork!) the project [here](https://github.com/meithan/AoCBoard).
 
-Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12)
+Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13)
+
+___
+
+**Day 13**: [Rain Risk](https://adventofcode.com/2020/day/13)<a name="day13"></a>
+
+8m 5s (#1076) / 2h 1m 15s (#3223) - [code](https://github.com/meithan/AoC20/blob/main/day13.py)
+
+It took me *two hours* to get the second star. I hate you, Chinese remainder theorem!
+
+Part 1 is straightforward: if the earliest departure time is `td`, then `td % p` is how long ago bus `p` last passed, and `p - (td % p)` is how long we have to wait after the earliest departure time until that bus passes again.
+
+For instance, if `td = 939`, bus `p = 7` passed `939 % 7 = 1` minute ago, and so we'd have to wait `7 - (939 % 7) = 6` minutes (time `945`) for it to pass again.
+
+Hence, we simply iterate over the buses and find which has the least wait time `p - (td % p)`.
+
+Easy enough, took me 8 minutes. And I got beat to the gold medal by a mere *3 seconds*! Cosmic balance, I guess, since I beat him yesterday by 6 seconds.
+
+Part 2 is where I really had to [squeeze lemons for my brain](https://tenor.com/view/thinking-think-thinking-cap-brain-power-hitchhikers-gif-17970923). The problem is to find `x` that simultaneously satisfies all `x + d_i = 0 (mod p_i)` where `p_i` are the bus IDs and `d_i` are their offsets, given by their positions in the list. Since all the bus IDs are prime (which implies they are pairwise [coprime](https://en.wikipedia.org/wiki/Coprime_integers)), this is basically the statement of the [Chinese remainder theorem](https://en.wikipedia.org/wiki/Chinese_remainder_theorem). While I had come into contact with it in a crypto class years ago, I certainly did not remember how to construct a solution for it.
+
+Actually I initially *ignored* the warning about the huge size of the answer and tried a naive brute force solution. Given a guess for `x`, one can simply check if `x + d_i = 0 (mod p_i)` holds for all the `p_i`. I started at `x = 100000000000000` and went in steps of 23, the first bus ID. While this idea works for the smaller test inputs, it immediately became obvious that it wouldn't for the actual input. But at least that got me in the right track.
+
+Meanwhile, I tried to figure out the smallest test input: `17,x,13,19` for which the answer is `3417`. If the problem were to find when all buses coincide at one time, it would be easy: that's just their [least common multiple](https://en.wikipedia.org/wiki/Least_common_multiple) (LCM), which, since they're all prime, is just their product. So I initially tried variations on that, things like `(17)*(13-2)*(19-3)`. Shots in the dark, really.
+
+After fiddling with such mindless attempts for a while I decided to concentrate on just the first two numbers: 17, with offset 0, and 13, with offset 2. So one is looking for the first time `x` such that `x = 0 (mod 17)` and `x + 2 = 0 mod(13)`. Put another way, we seek the smallest `x` such that `17*a = x` and `13*b = x + 2` for two positive integers `a` and `b`. One insight is that this `x` can't be larger than the LCM of 17 an 13, in this case their product, since that is the period of repetition of the these two buses. That's a very small number, so brute-forcing the answer is easy:
+
+<pre>for a = 1, 2, 3, ...:
+  x = 17*a
+  If (x+2) % 13 == 0, stop; else, continue
+</pre>
+
+When this stops (and it *will* stop within 13 iterations) we'll have found our answer `x`. For 17 and 13, that's 102. That is, bus 17 will be just passing at time 102 (since 102 is divisible by 17), and bus 13 will be 2 minutes from passing, which is what we wanted.
+
+And now comes the key insight to the problem, which is what took me most of the solving time to figure out: once we've found the answer for the first two buses, they can be regarded as a single combined "unit" that "starts" at time offset 102 and then repeats every 17 * 13 = 221 steps. Crucially, that means that the full answer, once we include the next bus, 19, will occur on a time that is 102 plus a multiple of 221. In other words, we now must find the smallest `x` such that `221*a + 102 = x` and `19*b = x + 3`. One can use a slightly modified version of the same algorithm above to solve this:
+
+<pre>for a = 1, 2, 3, ...:
+  x = 221*a + 102
+  If (x+3) % 19 == 0, stop; else, continue
+</pre>
+
+This is guaranteed to stop within 19 iterations, so it should be very fast. And, since there are no more numbers in this test case the resulting `x` is the final answer. And indeed it is: 3417.
+
+This, finally, translates into a succinct and fast (for the sizes of the numbers in the input) algorithm to cumulatively build the answer:
+
+<pre>Start with p1 = first bus, d1 = 0 (the "offset" of the first bus).
+Then for the rest of the numbers p2 and their offset d2:
+  Solve the problem for the pair (p1, d1) and (p2, d2), that is, find x such that p1*a + d1 = x and p2*b = x + d2, using the algorithm above:
+    for a = 1, 2, 3, ...:
+      x = 221*a + 102
+      If (x+3) % 19 == 0, stop; else, continue
+  Set p1 = p1*p2 and d1 = x; continue with next number
+</pre>
+
+And voilà, after the last iteration `x` is the answer! And as long as the input numbers are smallish, this is very fast.
+
+After solving it I decided to see how one would do it by using the Chinese remainder theorem. And I indeed found a simple [algorithm](https://brilliant.org/wiki/chinese-remainder-theorem/) that can be readily implemented. It requires computing the [modular inverse](https://en.wikipedia.org/wiki/Modular_multiplicative_inverse), which is [a bit involved](https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm), but in this case it can be done by simple trial and error (since the input numbers are small). I left the implementation commented out at the end of the [code](https://github.com/meithan/AoC20/blob/main/day13.py).
+
+Whew!
 
 ___
 
