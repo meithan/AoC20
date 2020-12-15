@@ -6,7 +6,25 @@ I'll be updating this as a sort of mini blog whenever I can, commenting on the d
 
 You can also check out our fancy [custom private leaderboard](https://meithan.net/AoC20/), with medals awarded to the fastest solvers. See (and download/fork!) the project [here](https://github.com/meithan/AoCBoard).
 
-Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14)
+Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14) - [15](#day15)
+
+___
+
+**Day 15**: [Rambunctious Recitation](https://adventofcode.com/2020/day/15)<a name="day15"></a>
+
+15m 49s (#1359) / 17m 57s (#675) - [code](https://github.com/meithan/AoC20/blob/main/day15.py)
+
+A relatively easy problem, once you understand the game; I had to read the description a couple times to really get it. The only "trick" there is to it is to be careful about when a spoken number is added to the dict that keeps tracks of when numbers were spoken. Since we need to know when the number last spoken was spoken *before that*, we have to delay adding it to the dict until the next turn.
+
+A big shock, however, was that the code I wrote to solve Part 1 also solves Part 2 with no modification whatsoever (other than the number of turns to play). It takes 16 seconds, but it works as-is. This is unusual for AoC: Part 2 solutions normally require to modify and/or optimize the Part 1 solution.
+
+In fact, I wasn't the only person that was shocked by this: many others commented in the [AoC subreddit](https://www.reddit.com/r/adventofcode/) to report the same thing. A couple of the comments:
+
+> I literally had to make 3 changes to do part 2. Guess that makes up for day 13 psychologically destroying me
+
+> I was kinda shocked when my code printed a solution [for Part 2]. Guess day 13 really did mess with my brain.
+
+I wholeheartedly agree, after the trauma I also suffered from Day 13 Part 2.
 
 ___
 
