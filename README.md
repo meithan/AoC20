@@ -6,7 +6,79 @@ I'll be updating this as a sort of mini blog whenever I can, commenting on the d
 
 You can also check out our fancy [custom private leaderboard](https://meithan.net/AoC20/), with medals awarded to the fastest solvers. See (and download/fork!) the project [here](https://github.com/meithan/AoCBoard).
 
-Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14) - [15](#day15)
+Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14) - [15](#day15) - [16](#day16)
+
+___
+
+**Day 16**: [Ticket Translation](https://adventofcode.com/2020/day/16)<a name="day16"></a>
+
+27m 6s (#3115) / 48m 16s (#1175) - [code](https://github.com/meithan/AoC20/blob/main/day16.py)
+
+This one was weird and much fun. Difficulty's starting to ramp up a bit. Part 1 was mostly about getting all the input properly parsed (again, [regexes](https://en.wikipedia.org/wiki/Regular_expression) help here) and making simple checks on that.
+
+Part 2 is where it gets interesting: we had to solve a [Constraint Satisfaction Problem](https://en.wikipedia.org/wiki/Constraint_satisfaction_problem), though an easy one that can be solved "directly" without backtracking.
+
+The strategy is as follows. We keep sets of possible positions for every field; initially, all positions are possible for all fields. For a given position in the list of numbers, we check the numbers of all tickets in that position. In each case, we see which rules it violates, and remove that position from the set of possibles for that rule/field. We keep doing this until, eventually (hopefully), one of the fields gets narrowed down to a single possible position. We now know that that field corresponds to that position. We note it down, and then remove that position from the list of possibilities of all other fields. We keep repeating this process for the remaining numbers and positions. Eventually (again, hopefully), this will narrow down all fields to a single possible position, and we'll have our answer.
+
+Here's an example of the logic with the given test input for Part 2 (all tickets are valid already):
+
+```
+class: 0-1 or 4-19
+row: 0-5 or 8-19
+seat: 0-13 or 16-19
+
+your ticket:
+11,12,13
+
+nearby tickets:
+3,9,18
+15,1,5
+5,14,9
+```
+
+Each field starts with all positions as possibilities:
+
+```
+class: [1, 2, 3]
+row: [1, 2, 3]
+seat: [1, 2, 3]
+```
+
+Consider the numbers in the first position of all tickets: 3, 15 and 5 (one can include "your ticket", but the "nearby tickets" had enough information to solve it). 3 violates the 'class' rule, so we cross out position 1 from the 'class' possibilities. 15 violates the 'seat' rule, so we cross out position 1 from the seat possibilities. 5 satisfies all rules, so we do nothing. We now have:
+
+```
+class: [2, 3]
+row: [1, 2, 3]
+seat: [2, 3]
+```
+
+Now consider the numbers in the second position: 9 violates the 'seat' rule, so we cross it position 2 from it. 1 and 14 violate no rules. We have:
+
+```
+class: [2, 3]
+row: [1, 2, 3]
+seat: [3]
+```
+
+At this point we note that the 'seat' field has been reduced to a single possibility: position 3. So we cross out position 3 from all other fields:
+
+```
+class: [2]
+row: [1, 2]
+seat: [3]
+```
+
+As a consequence of this, now the 'class' field has been narrowed down to a single possibility, position 2, so we cross out that position from all fields (if it's still there). We obtain:
+
+```
+class: [2]
+row: [1]
+seat: [3]
+```
+
+Now all fields have been narrowed down to a single possibility, and so we're done!
+
+Solving the actual input follows the exact same process, just for many more fields and tickets. As long as we make sure to correctly cross out possibilities as soon as we can, the process will terminate. This was a fun one!
 
 ___
 
