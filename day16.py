@@ -50,8 +50,8 @@ with open(sys.argv[1]) as f:
 # ------------------------------------
 # Part 1
 
-def check_rule(num, rule1, rule2):
-  return (rule1[0] <= num <= rule1[1]) or (rule2[0] <= num <= rule2[1])
+def satisfies(num, rule):
+  return (rule[0][0] <= num <= rule[0][1]) or (rule[1][0] <= num <= rule[1][1])
 
 valid_tickets = []
 invalid_numbers = []
@@ -62,7 +62,7 @@ for ticket in nearby_tickets:
 
     is_valid = False
     for rule in rules.values():
-      if check_rule(num, rule[0], rule[1]):
+      if satisfies(num, rule):
         is_valid = True
         break
 
@@ -82,35 +82,43 @@ print("Part 1:", ans1)
 
 N = len(my_ticket)
 
+# All fields start with all positions markes as possible
 possibles = {x: set(range(N)) for x in rules}
-for ticket in [my_ticket] + valid_tickets:
-  for pos,num in enumerate(ticket):
-    for field in rules:
-      rule = rules[field]
-      if not check_rule(num, rule[0], rule[1]):
-        if pos in possibles[field]:
-          possibles[field].remove(pos)
 
-solutions = {}
+# The (valid) "nearby_tickets" had enough info to solve it, but doesn't hurt
+tickets = [my_ticket] + valid_tickets
+
+# Check all numbers in all tickets repeatedly
 while True:
-  all_empty = True
-  for field in possibles:
-    if len(possibles[field]) == 0:
-      continue
-    elif len(possibles[field]) == 1:
-      all_empty = False
-      pos = possibles[field].pop()
-      solutions[field] = pos
-      for field1 in possibles:
-        if field1 != field and pos in possibles[field1]:
-          possibles[field1].remove(pos)
-  if all_empty:
+  for ticket in tickets:
+    for pos, num in enumerate(ticket):
+
+      # Check if this number violates any rule; if it does, remove its
+      # position from that field's possibilities
+      for field in possibles:
+        if not satisfies(num, rules[field]):
+          if pos in possibles[field]:
+            possibles[field].remove(pos)
+
+      # Now check if any field has been reduced to a single possibility;
+      # if so, remove its position from all other fields
+      for field in possibles:
+        if len(possibles[field]) == 1:
+          pos = list(possibles[field])[0]
+          for field1 in possibles:
+            if field1 != field and pos in possibles[field1]:
+              possibles[field1].remove(pos)
+
+  # Stop when all fields have been narrowed down to a single possibility
+  if all([len(x) == 1 for x in possibles.values()]):
     break
 
+# Compute the product of the numbers in my ticket for fields starting
+# with 'departure'
 ans2 = 1
-for field in solutions:
+for field in possibles:
   if field.startswith("departure"):
-    pos = solutions[field]
+    pos = list(possibles[field])[0]
     ans2 *= my_ticket[pos]
 
 print("Part 2:", ans2)
