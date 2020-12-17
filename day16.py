@@ -97,8 +97,7 @@ while True:
       # position from that field's possibilities
       for field in possibles:
         if not satisfies(num, rules[field]):
-          if pos in possibles[field]:
-            possibles[field].remove(pos)
+          possibles[field].discard(pos)
 
       # Now check if any field has been reduced to a single possibility;
       # if so, remove its position from all other fields
@@ -106,8 +105,8 @@ while True:
         if len(possibles[field]) == 1:
           pos = list(possibles[field])[0]
           for field1 in possibles:
-            if field1 != field and pos in possibles[field1]:
-              possibles[field1].remove(pos)
+            if field1 != field:
+              possibles[field1].discard(pos)
 
   # Stop when all fields have been narrowed down to a single possibility
   if all([len(x) == 1 for x in possibles.values()]):
