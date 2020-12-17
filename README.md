@@ -6,7 +6,33 @@ I'll be updating this as a sort of mini blog whenever I can, commenting on the d
 
 You can also check out our fancy [custom private leaderboard](https://meithan.net/AoC20/), with medals awarded to the fastest solvers. See (and download/fork!) the project [here](https://github.com/meithan/AoCBoard).
 
-Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14) - [15](#day15) - [16](#day16)
+Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14) - [15](#day15) - [16](#day16) - [17](#day17)
+
+___
+
+**Day 17**: [Conway Cubes](https://adventofcode.com/2020/day/17)<a name="day17"></a>
+
+36m 27s (#1503) / 49m 52s (#1690) - [code](https://github.com/meithan/AoC20/blob/main/day17.py)
+
+It was nice encountering [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) (GoL) as I love it profoundly, and it has added significance at this time since John Conway [pased](https://www.theguardian.com/science/2020/apr/23/john-horton-conway-obituary) earlier this year. It is one of those quirky little ideas that turn out to be much, much deeper than it initially appears. The zoo of static and moving [patterns](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life#Examples_of_patterns) that it contains have been [thoroughly mapped](https://www.conwaylife.com/wiki/Category:Patterns) by mathematicians and hobbyists alike, and their interactions are rich enough that GoL has been [proven](http://rendell-attic.org/gol/utm/index.htm) to be [Turing complete](https://en.wikipedia.org/wiki/Turing_completeness).
+
+Despite having [coded the original](https://www.youtube.com/watch?v=A2Hh9NF-pt0) 2D GoL more than once in the past it's always nice to do it again, and this day's problem gave me an opportunity to think about how to optimize the usual implementation.
+
+My [original solution](https://github.com/meithan/AoC20/blob/main/day17_orig.py) was the usual direct implementation using a large array to store the current cell states and evolving it by applying the rules to every cell, using a second array as a temporary buffer. Since information propagates at a maximum speed of one cell per generation (the "[speed of light](https://en.wikipedia.org/wiki/Speed_of_light_(cellular_automaton))" in GoL) one can determine the size of the arrays required to simulate the game for a given number of generations. The extension to 3D and 4D doesn't really change much, the only differences being that the arrays have to be 3- and 4-dimensional, of course, and that we have to consider more neighbors than the traditional eight when applying the rules.
+
+This implementation takes about 2 seconds to simulate 6 generations ("cycles") for the 3D version in Part 1, and about *3 minutes* for the 4D version in Part 2. While this was enough to get me the stars (and gold medals!), I decided to find a more efficient solution. And that I did: my [optimized solution]((https://github.com/meithan/AoC20/blob/main/day17.py)) takes about *half a second* to solve *both* parts! And other than changing the number of neighbors to check and the number of coordinates used to identify a cell, the code is exactly the same for 3D and 4D (and for 2D as well!).
+
+Here's how it works. Instead of keeping the cells states in a large array we only keep track of *live* (or active) cells, storing them in a [set](https://docs.python.org/3/library/stdtypes.html#set) using tuples with the coordinates as unique identifiers. Any set of coordinates not in the set at any one time are considered dead cells, so we don't need to store their state anywhere.
+
+In each generation, we start by counting the number of neighboring live cells but only for the neighbors of the currently live cells (as opposed to doing it for the whole array in the original solution). To do this we iterate over all live cells and add 1 to a count associated to each of its neighbors. These counts are stored in a [defaultdict](https://docs.python.org/3/library/collections.html#collections.defaultdict) using the neighbor's coordinates as keys with zero as the default value.
+
+After this we can apply the rule concerning live cells. For each live cell we just check the neighbors counts dict for its coordinates: if the value is 2 or 3, the cell lives on and we add it to the `new_actives` set; otherwise, it dies, and we simply don't add it.
+
+For the second rule (currently dead cells with exactly 3 neighbors become active), we could just check the neighbors dict for cells with 3 neighbors, but this can potentially be time-consuming if there are many live cells (and thus many cells with neighbors counts). Instead, during the counting of the active neighbors above we also keep an eye out for any count that reaches 3; when that happens we add that cell to another set of "seed" cells. If a count reaches 4 we remove the cell from the set of seed cells. Thus by the time we're done counting the neighbors we'll know what cells are potentially seed cells without having to do any extra work.
+
+Then, we go over the seed cells: if the cell is currently dead, it becomes active and we add it to the `new_actives` set; if it's currently alive then the rule doesn't apply and we do nothing.
+
+After doing all of this, `new_actives` becomes the new `actives` and we can start the next generation. This completes the algorithm, which turns out to be particularly succinct and intuitive (we don't even explicitly handle the individual cell coordinates). And it is both lightning fast (since sets and dicts are structures with O(1) lookup, addition, update and removal operations) *and* relatively memory efficient as long as dead cells make up the majority of the simulated region, since we hold information only for the live cells compared to having to store and update a whole array which could potentially be mostly dead cells. And we have no simulation space limitation either: the active cells could extend indefinitely far from the "origin" without having to resize anything. I'm pleased with this algorithm.
 
 ___
 
