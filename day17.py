@@ -1,5 +1,6 @@
 # Day 17: Conway Cubes
 
+import collections
 import itertools
 import sys
 
@@ -29,15 +30,15 @@ def gen_deltas(ndims):
 def do_cycle(actives, deltas):
 
   new_actives = set()
-  num_neighs = {}
+  num_neighs = collections.defaultdict(lambda: 0)
   seeds = set()
 
-  # Accumulate the number of neighbors of the actives in the num_neighs set
+  # Count the number of active neighbors for the neighbors of the active cells
+  # If a count reaches 3 we add it to the seeds set, but if a count reaches 4
+  # we take it out from the set.
   for active in actives:
     for ds in deltas:
       neigh = tuple(active[i]+ds[i] for i in range(len(ds)))
-      if neigh not in num_neighs:
-        num_neighs[neigh] = 0
       num_neighs[neigh] += 1
       if num_neighs[neigh] == 3:
         seeds.add(neigh)
