@@ -12,15 +12,15 @@ ___
 
 **Day 17**: [Conway Cubes](https://adventofcode.com/2020/day/17)<a name="day17"></a>
 
-36m 27s (#1503) / 49m 52s (#1690) - [code](https://github.com/meithan/AoC20/blob/main/day17.py)
+36m 27s (#1503) / 49m 52s (#1690) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day17.py)
 
 It was nice encountering [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) (GoL) as I love it profoundly, and it has added significance at this time since John Conway [pased](https://www.theguardian.com/science/2020/apr/23/john-horton-conway-obituary) earlier this year. It is one of those quirky little ideas that turn out to be much, much deeper than it initially appears. The zoo of static and moving [patterns](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life#Examples_of_patterns) that it contains have been [thoroughly mapped](https://www.conwaylife.com/wiki/Category:Patterns) by mathematicians and hobbyists alike, and their interactions are rich enough that GoL has been [proven](http://rendell-attic.org/gol/utm/index.htm) to be [Turing complete](https://en.wikipedia.org/wiki/Turing_completeness).
 
 Despite having [coded the original](https://www.youtube.com/watch?v=A2Hh9NF-pt0) 2D GoL more than once in the past it's always nice to do it again, and this day's problem gave me an opportunity to think about how to optimize the usual implementation.
 
-My [original solution](https://github.com/meithan/AoC20/blob/main/day17_orig.py) was the usual direct implementation using a large array to store the current cell states and evolving it by applying the rules to every cell, using a second array as a temporary buffer. Since information propagates at a maximum speed of one cell per generation (the "[speed of light](https://en.wikipedia.org/wiki/Speed_of_light_(cellular_automaton))" in GoL) one can determine the size of the arrays required to simulate the game for a given number of generations. The extension to 3D and 4D doesn't really change much, the only differences being that the arrays have to be 3- and 4-dimensional, of course, and that we have to consider more neighbors than the traditional eight when applying the rules.
+My [original solution](https://github.com/meithan/AoC20/blob/main/solutions/day17_orig.py) was the usual direct implementation using a large array to store the current cell states and evolving it by applying the rules to every cell, using a second array as a temporary buffer. Since information propagates at a maximum speed of one cell per generation (the "[speed of light](https://en.wikipedia.org/wiki/Speed_of_light_(cellular_automaton))" in GoL) one can determine the size of the arrays required to simulate the game for a given number of generations. The extension to 3D and 4D doesn't really change much, the only differences being that the arrays have to be 3- and 4-dimensional, of course, and that we have to consider more neighbors than the traditional eight when applying the rules.
 
-This implementation takes about 2 seconds to simulate 6 generations ("cycles") for the 3D version in Part 1, and about *3 minutes* for the 4D version in Part 2. While this was enough to get me the stars (and gold medals!), I decided to find a more efficient solution. And that I did: my [optimized solution]((https://github.com/meithan/AoC20/blob/main/day17.py)) takes about *half a second* to solve *both* parts! And other than changing the number of neighbors to check and the number of coordinates used to identify a cell, the code is exactly the same for 3D and 4D (and for 2D as well!).
+This implementation takes about 2 seconds to simulate 6 generations ("cycles") for the 3D version in Part 1, and about *3 minutes* for the 4D version in Part 2. While this was enough to get me the stars (and gold medals!), I decided to find a more efficient solution. And that I did: my [optimized solution]((https://github.com/meithan/AoC20/blob/main/solutions/day17.py)) takes about *half a second* to solve *both* parts! And other than changing the number of neighbors to check and the number of coordinates used to identify a cell, the code is exactly the same for 3D and 4D (and for 2D as well!).
 
 Here's how it works. Instead of keeping the cells states in a large array we only keep track of *live* (or active) cells, storing them in a [set](https://docs.python.org/3/library/stdtypes.html#set) using tuples with the coordinates as unique identifiers. Any set of coordinates not in the set at any one time are considered dead cells, so we don't need to store their state anywhere.
 
@@ -38,7 +38,7 @@ ___
 
 **Day 16**: [Ticket Translation](https://adventofcode.com/2020/day/16)<a name="day16"></a>
 
-27m 6s (#3115) / 48m 16s (#1175) - [code](https://github.com/meithan/AoC20/blob/main/day16.py)
+27m 6s (#3115) / 48m 16s (#1175) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day16.py)
 
 This one was weird and much fun. Difficulty's starting to ramp up a bit. Part 1 was mostly about getting all the input properly parsed (again, [regexes](https://en.wikipedia.org/wiki/Regular_expression) help here) and making simple checks on that.
 
@@ -110,7 +110,7 @@ ___
 
 **Day 15**: [Rambunctious Recitation](https://adventofcode.com/2020/day/15)<a name="day15"></a>
 
-15m 49s (#1359) / 17m 57s (#675) - [code](https://github.com/meithan/AoC20/blob/main/day15.py)
+15m 49s (#1359) / 17m 57s (#675) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day15.py)
 
 A relatively easy problem, once you understand the game; I had to read the description a couple times to really get it. The only "trick" there is to it is to be careful about when a spoken number is added to the dict that keeps tracks of when numbers were spoken. Since we need to know when the number last spoken was spoken *before that*, we have to delay adding it to the dict until the next turn.
 
@@ -128,7 +128,7 @@ ___
 
 **Day 14**: [Docking Data](https://adventofcode.com/2020/day/14)<a name="day14"></a>
 
-1h 5m 30s (#5372) / 1h 16m 34s (#3186) - [code](https://github.com/meithan/AoC20/blob/main/day14.py)
+1h 5m 30s (#5372) / 1h 16m 34s (#3186) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day14.py)
 
 Not much to report here, a straightforward string manipulation problem. One can convert an integer to its binary string using built-in function [bin](https://docs.python.org/3/library/functions.html#bin) (it comes prefixed with "0b", which one usually wants to remove), and a binary string back to an integer using [int](https://docs.python.org/3/library/functions.html#int) and specifying base 2, `int(bin_string, 2)`. String method [zfill](https://docs.python.org/3/library/stdtypes.html#str.zfill) fills a string with zeros on the left.
 
@@ -138,7 +138,7 @@ ___
 
 **Day 13**: [Rain Risk](https://adventofcode.com/2020/day/13)<a name="day13"></a>
 
-8m 5s (#1076) / 2h 1m 15s (#3223) - [code](https://github.com/meithan/AoC20/blob/main/day13.py)
+8m 5s (#1076) / 2h 1m 15s (#3223) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day13.py)
 
 It took me *two hours* to get the second star. I hate you, Chinese remainder theorem!
 
@@ -187,7 +187,7 @@ Then for the rest of the numbers p2 and their offset d2:
 
 And voilà, after the last iteration `x` is the answer! And as long as the input numbers are smallish, this is very fast.
 
-After solving it I decided to see how one would do it by using the Chinese remainder theorem. And I indeed found a simple [algorithm](https://brilliant.org/wiki/chinese-remainder-theorem/) that can be readily implemented. It requires computing the [modular inverse](https://en.wikipedia.org/wiki/Modular_multiplicative_inverse), which is [a bit involved](https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm), but in this case it can be done by simple trial and error (since the input numbers are small). I left the implementation commented out at the end of the [code](https://github.com/meithan/AoC20/blob/main/day13.py).
+After solving it I decided to see how one would do it by using the Chinese remainder theorem. And I indeed found a simple [algorithm](https://brilliant.org/wiki/chinese-remainder-theorem/) that can be readily implemented. It requires computing the [modular inverse](https://en.wikipedia.org/wiki/Modular_multiplicative_inverse), which is [a bit involved](https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm), but in this case it can be done by simple trial and error (since the input numbers are small). I left the implementation commented out at the end of the [code](https://github.com/meithan/AoC20/blob/main/solutions/day13.py).
 
 Whew!
 
@@ -195,7 +195,7 @@ ___
 
 **Day 12**: [Rain Risk](https://adventofcode.com/2020/day/12)<a name="day12"></a>
 
-10m 25s (#884) / 28m 33s (#1433) - [code](https://github.com/meithan/AoC20/blob/main/day12.py)
+10m 25s (#884) / 28m 33s (#1433) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day12.py)
 
 A simple problem, with the solutions to the two parts almost the same.
 
@@ -207,7 +207,7 @@ ___
 
 **Day 11**: [Seating System](https://adventofcode.com/2020/day/11)<a name="day11"></a>
 
-13m 38s (#437) / 40m 8s (#1534) - [code](https://github.com/meithan/AoC20/blob/main/day11.py)
+13m 38s (#437) / 40m 8s (#1534) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day11.py)
 
 Another straightforward coding problem. My Part 1 time wasn't that bad (top 500), but I took way too long to complete Part 2, which was really only a small modification of Part 1, due to little bugs (typos, forgetting to re-start from the original grid, [off-by-one](https://en.wikipedia.org/wiki/Off-by-one_error) errors, ...).
 
@@ -217,7 +217,7 @@ ___
 
 **Day 10**: [Adapter Array](https://adventofcode.com/2020/day/10)<a name="day10"></a>
 
-9m 16s (#1955) / 53m 35s (#2905) - [code](https://github.com/meithan/AoC20/blob/main/day10.py)
+9m 16s (#1955) / 53m 35s (#2905) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day10.py)
 
 Ah, the first problem where the naive brute-force solution won't work. I've been waiting for you.
 
@@ -255,13 +255,13 @@ After solving the problem I investigated what general solutions exist, as this s
 
 > "If A is the adjacency matrix of the directed or undirected graph G, then the matrix A^n (i.e., the matrix product of n copies of A) has an interesting interpretation: the element (i, j) gives the number of (directed or undirected) walks of length n from vertex i to vertex j."
 
-One can construct the adjacency matrix of the graph of adapters, compute the successive A^k for k in [1,N] (using numpy's [matmul](https://numpy.org/doc/stable/reference/generated/numpy.matmul.html)), and simply accumulate the value of A^k_{1,N}, since that would be the number of k-length paths between the first and last nodes. And, sure enough, this [works too](https://github.com/meithan/AoC20/blob/main/day10_alt.py).
+One can construct the adjacency matrix of the graph of adapters, compute the successive A^k for k in [1,N] (using numpy's [matmul](https://numpy.org/doc/stable/reference/generated/numpy.matmul.html)), and simply accumulate the value of A^k_{1,N}, since that would be the number of k-length paths between the first and last nodes. And, sure enough, this [works too](https://github.com/meithan/AoC20/blob/main/solutions/day10_alt.py).
 
 ___
 
 **Day 9**: [Encoding Error](https://adventofcode.com/2020/day/9)<a name="day9"></a>
 
-13m 0s (#3161) / 26m 23s (#3470) - [code](https://github.com/meithan/AoC20/blob/main/day09.py)
+13m 0s (#3161) / 26m 23s (#3470) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day09.py)
 
 Another problem with a straightforward brute force solution. But I wasted too much time obsessing on optimizing and over-complicating stuff (I used a deque!), so I got pushed to 3rd place in our private leaderboard. Darn. You know what [they say](https://softwareengineering.stackexchange.com/questions/80084/is-premature-optimization-really-the-root-of-all-evil): "premature optimization is the root of all evil".
 
@@ -273,7 +273,7 @@ ___
 
 **Day 8**: [Handheld Halting](https://adventofcode.com/2020/day/8)<a name="day8"></a>
 
-5m 7s (#462) / 11m 33s (#413) - [code](https://github.com/meithan/AoC20/blob/main/day08.py)
+5m 7s (#462) / 11m 33s (#413) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day08.py)
 
 Pretty straightforward. The program exits if we come back to a previously executed instruction; this *will* result in an infinite loop since the effect of the instructions does not depend on the value of the accumulator.
 
@@ -283,9 +283,9 @@ ___
 
 **Day 7**: [Handy Haversacks](https://adventofcode.com/2020/day/7)<a name="day7"></a>
 
-26m 22s (#1979) / 54m 55s (#2907) - [code](https://github.com/meithan/AoC20/blob/main/day07.py)
+26m 22s (#1979) / 54m 55s (#2907) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day07.py)
 
-This one was a bit more difficult than previous problems. The relationships between the bag types (color), i.e. which bags hold which bags, can be represented as a weighted [directed graph](https://en.wikipedia.org/wiki/Directed_graph). For the test input provided in the problem statement this looks like this (plotted with [networkx](https://networkx.org/), code [here](https://github.com/meithan/AoC20/blob/main/day07_viz.py)):
+This one was a bit more difficult than previous problems. The relationships between the bag types (color), i.e. which bags hold which bags, can be represented as a weighted [directed graph](https://en.wikipedia.org/wiki/Directed_graph). For the test input provided in the problem statement this looks like this (plotted with [networkx](https://networkx.org/), code [here](https://github.com/meithan/AoC20/blob/main/solutions/day07_viz.py)):
 
 ![graph](day07_test1.png)
 
@@ -309,7 +309,7 @@ ___
 
 **Day 6**: [Custom Customs](https://adventofcode.com/2020/day/6)<a name="day6"></a>
 
-4m 5s (#595) / 13m 11s (#2022) - [code](https://github.com/meithan/AoC20/blob/main/day06.py)
+4m 5s (#595) / 13m 11s (#2022) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day06.py)
 
 This problem basically is about computing set [unions](https://en.wikipedia.org/wiki/Union_(set_theory)) and [intersections](https://en.wikipedia.org/wiki/Intersection_(set_theory)). In my original solution I did this manually. Too late I remembered that Python sets actually support these [operations](https://docs.python.org/3/library/stdtypes.html#set-types-set-frozenset)! Naturally, | is the union operator and & is the intersection operator. Could've saved me some time.
 
@@ -317,7 +317,7 @@ ___
 
 **Day 5**: [Binary Boarding](https://adventofcode.com/2020/day/5)<a name="day5"></a>
 
-28m 50s (#5221) / 33m 28s (#4336) - [code](https://github.com/meithan/AoC20/blob/main/day05.py)
+28m 50s (#5221) / 33m 28s (#4336) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day05.py)
 
 It is straightforward to simply code the [binary search](https://en.wikipedia.org/wiki/Binary_search_algorithm) process described in the problem. Careful with a possible [off-by-one error](https://en.wikipedia.org/wiki/Off-by-one_error) in how the bounds are updated.
 
@@ -337,7 +337,7 @@ ___
 
 **Day 4**: [Passport Processing](https://adventofcode.com/2020/day/4)<a name="day4"></a>
 
-7m 31s (#759) / 22m 29s (#579) - [code](https://github.com/meithan/AoC20/blob/main/day04.py)
+7m 31s (#759) / 22m 29s (#579) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day04.py)
 
 The kind of string matching problem for which [regular expressions](https://en.wikipedia.org/wiki/Regular_expression) ("regexes") were invented (and Python has a nice [regex module](https://docs.python.org/3/library/re.html)). It was a nice little regex practice; I did have to look a couple of things up on the web. [regexr](https://regexr.com/) is an incredibly useful resource for that!
 
@@ -345,7 +345,7 @@ ___
 
 **Day 3**: [Toboggan Trajectory](https://adventofcode.com/2020/day/3)<a name="day3"></a>
 
-4m 23s (#483) / 6m 39s (#295) - [code](https://github.com/meithan/AoC20/blob/main/day03.py)
+4m 23s (#483) / 6m 39s (#295) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day03.py)
 
 Another easy one. Careful with mixing up the meaning of rows and column in these arrays. And there's no need to actually extend the "forest" to the right, one can simply take the x coordinate modulo the number of columns (using the [modulo operator](https://python-reference.readthedocs.io/en/latest/docs/operators/modulus.html) `%`) to effectively make the array wrap around to the right.
 
@@ -354,7 +354,7 @@ ___
 
 **Day 2**: [Password Philosophy](https://adventofcode.com/2020/day/2)<a name="day2"></a>
 
-2m 47s (#130) / 4m 02s (**#69!**) - [code](https://github.com/meithan/AoC20/blob/main/day02.py)
+2m 47s (#130) / 4m 02s (**#69!**) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day02.py)
 
 An easy one ... and I made the top 100 for the second star! Which put me on the global leaderboard! Yay! These are my first ever leaderboard points. And probably the only time I'll be on the global leaderboard (keeping expections low here).
 
@@ -364,7 +364,7 @@ ___
 
 **Day 1**: [Report Repair](https://adventofcode.com/2020/day/1)<a name="day1"></a>
 
-7m 08s (#293) / 8m 06s (#283) - [code](https://github.com/meithan/AoC20/blob/main/day01.py)
+7m 08s (#293) / 8m 06s (#283) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day01.py)
 
 I coded the solution to Part 1 in just 2 minutes ... But everyone submitting at the same time [overloaded the AWS instances](https://www.reddit.com/r/adventofcode/comments/k4ejjz/2020_day_1_unlock_crash_postmortem/) AoC runs on! So I could only submit my answer to Part 1 (and unlock Part 2) after waiting for several minutes. As a result [Eric Wastl](http://was.tl/), the creator of AoC, invalidated the leaderboard for this puzzle.
 
@@ -374,7 +374,7 @@ Day 1 is always just a warm-up. The input was short enough that a brute-force ch
 
 This solution works in a reasonable time because the list of numbers is short (200). But if the list had a million numbers it would be a different story. The current brute-force check-all-combinations is O(n^2) for Part 1 and O(n^3) for Part 2. Can we do better?
 
-Sure! Here's a [faster solution](https://github.com/meithan/AoC20/blob/main/day01_fast.py).
+Sure! Here's a [faster solution](https://github.com/meithan/AoC20/blob/main/solutions/day01_fast.py).
 
 On a first pass we load all the numbers in a Python [set](https://docs.python.org/3/library/stdtypes.html#set). This is a data structure that stores items in no particular order (unlike a list) and implements a [hash table](https://en.wikipedia.org/wiki/Hash_table) for quick lookups. The upshot is that asking whether some item is contained or not in the set is an O(1) operation (on average) -- that is, the time it takes does not grow with the number of items in the set, so it doesn't matter if it has 200 or 1 million items in it. Using a list or tuple you have to check all the elements one by one, and that is O(n). Even if you did binary search in a previously sorted list that would be O(log(n)) -- nothing beats O(1).
 
