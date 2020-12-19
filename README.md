@@ -6,7 +6,93 @@ I'll be updating this as a sort of mini blog whenever I can, commenting on the d
 
 You can also check out our fancy [custom private leaderboard](https://meithan.net/AoC20/), with medals awarded to the fastest solvers. See (and download/fork!) the project [here](https://github.com/meithan/AoCBoard).
 
-Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14) - [15](#day15) - [16](#day16) - [17](#day17)
+Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14) - [15](#day15) - [16](#day16) - [17](#day17) - [18](#day18)
+
+___
+
+**Day 18**: [Operation Order](https://adventofcode.com/2020/day/18)<a name="day188"></a>
+
+29m 37s (#1459) / 1h 7m 56s (#2145) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day18.py)
+
+Ah, parsing and evaluating arithmetical expressions! Something very relevant for programmers writing interpreters and compiler and for older nerds who used Hewlett-Packard calculators. It's one of those things that I'd heard about many times but never actually done.
+
+I honestly didn't know how to do this, so my [original solution](https://github.com/meithan/AoC20/blob/main/solutions/day18_orig.py) is an ugly mess that simply tries to follow the order of operations. The only highlight is using recursion to handle parenthesized parts of the expression. Whenever an opening parenthesis is encountered, we search for the *matching* closing parenthesis (by keeping a count of how many opening/closing parenthesis we encounter along the way, stopping on a closing parenthesis *and* a count of zero) and evaluate what's in between recursively, substituting the returned result for the parenthesized part. For Part 2, after recursive evaluations finished I first applied all additions and then all multiplications.
+
+Not happy about this, I decided to learn how it's actually done: the [shunting-yard algorithm](https://en.wikipedia.org/wiki/Shunting-yard_algorithm) (invented by [E.W. Dijkstra](https://en.wikipedia.org/wiki/Edsger_Dijkstra)) together with a refresher on how to evaluate expressions in [reverse Polish notation](https://en.wikipedia.org/wiki/Reverse_Polish_notation) (RPN; aka postfix notation). I only glanced over the general idea of the Wikipedia article and tried to come up with the rest myself (after a good night of sleep). Here's the full algorithm I came up with, which is pretty much the same as that described on Wikipedia.
+
+- First we separate the input string into **tokens**, which can be **numbers**, the **operators** + and \*, or opening and closing **parentheses**. In my *original* original solution this parsed only single-digit numbers, and this worked since all numbers in the input were single-digit. The revised version also handles multi-digit numbers.
+
+- The goal of the first part of the algorithm is to produce a sequence of numbers and operators only (no parenthesis) in RPN in the correct order that conforms to the established rules of precedence and parenthesized parts. This can then be directly evaluated.
+
+- To do this we maintain two data structures: a LIFO **evaluation queue** ([queue.Queue](https://docs.python.org/3/library/queue.html), but a simple list would do for this part as well) in which we are to build the RPN sequence to be evaluated, and an **operator stack** (a simple list works, as appending or popping from the end is O(1)) to temporarily hold operators and parentheses.
+
+- We then go over the tokens one by one, applying to following simple rules:
+    - When a **number** is encountered, we just push it to the *queue*;
+    - When an **operator** is encountered, if the operator stack is empty we *push* the operator to the *stack*. Otherwise, we peek into the top of the stack for the last operator that was added before the new one.
+        - If the last operator is an opening *parens* (can't be a closing one), we simply *push* the new operator to the *stack*;
+        - If the new operator has *higher* precedence than the last one, we just push the new operator to the stack and continue;
+        - If the new operator has *lower* precedence than the last one, then we *pop* the last operator from the stack, *push* it to the *queue*, and only then *push* the new operator to the *stack*;
+        - If they have *equal* precedence, then if the new operator is *left-associative* we treat it as having a *lower* precedence (since we would apply it later as it is to the right of the last op), while if the new operator is *right-associative* we treat is as having *higher* precedence; whatever the case, we follow the actions described above;
+    - When an **opening parenthesis** is encountered, we just *push* it to the *operator stack*;
+    - When a **closing parenthesis** is encountered, we start a loop successively popping operators from the stack and pushing them to the queue, stopping when we've popped an *opening parenthesis* (which has to be the matching one);
+
+- After we've gone through all the tokens, we finish the algorithm by *popping* all operators left on the stack and pushing them to the *queue*.
+
+- The **evaluation queue** now contains the operations to be performed in Reverse Polish Notation, in the *correct order* considering the specified rules of operator precedence and parenthesized groups.
+
+- Finally, we execute the evaluation queue. To do this we define a new **execution stack**, which is initially empty. Then, we pop the elements from the front of the **evaluation queue** one at a time and:
+    - If the element is a **number**, we push it to the *execution stack*;
+    - If the element is an **operator**, we pop the *last two* operands from the stack, *apply* the operator to them, and push the result *back into the stack*.
+
+Once this process is all done, what's left on the execution stack is the result of the evaluation!
+
+My solution defines an `evaluate` function that receives the previously separated list of tokens to evaluate and a dictionary containing the operator precedence rules (each operator is assigned an integer; higher integers indicate higher precedence). Then the only difference between the two parts of the problem is that in Part 1 the operators have equal precedence (`{'+': 0, '*': 0}`), while in Part 2 addition has a higher precedence (`{'+': 1, '*': 0}`)
+
+Here's a worked example. Suppose the string is `1 + 2 * (3 + 4)` and that we use the conventional precedence of operators (multiplication before addition). In that case this evaluates to `15`. Tokenization yields `[1, +, *, (, 3, +, 4, )]`. We start with the evaluation stack (call it `Q`) and operator stack (`S`) empty. Then, the algorithm proceeds as follows:
+
+- `1`. We push it to Q.
+<br>Q: `[1]`, S: `[]`
+- `+`. S is empty so we just push it to S.
+<br>Q: `[1]`, S: `[+]`
+- `2`. We push it to Q.
+<br>Q: `[1, 2]`, S: `[]`  
+- `*`. We peek the last op in S, which is `+`. Since `*` has higher precedence, we just push `*` to S.
+<br>Q: `[1, 2]`, S: `[+, *]`
+- `(`. We push it to S.
+<br>Q: `[1, 2]`, S: `[+, *, (]`
+- `3`. We push it to Q.
+<br>Q: `[1, 2, 3]`, S: `[+, *, (]`
+- `+`. We peek the last op in S, which is `(`. Since it's a parens, we just push `+` to S.
+<br>Q: `[1, 2, 3]`, S: `[+, *, (, +]`
+- `4`. We push it to Q.
+<br>Q: `[1, 2, 3, 4]`, S: `[+, *, (, +]`
+- `)`. We start popping operators from S. We pop `+` and push it to Q. We now pop `(`, which is the matching opening parens, so we stop.
+<br>Q: `[1, 2, 3, 4, +]`, S: `[+, *]`
+
+We're done with the tokens. S is not empty, so we pop what's left (one at a time from the top!) and push it into Q. The evaluation queue is now a correct RPN expression of the operations to perform:
+
+- Q: `[1, 2, 3, 4, +, *, +]`
+
+To obtain the final result we pop all values from Q and do the operations as indicated above, using a newly initializes execution stack S (we could reuse the operation stack, as it's empty by now):
+
+- `1`: push it to S.
+<br>S: `[1]`
+- `2`: push it to S.
+<br>S: `[1, 2]`
+- `3`: push it to S.
+<br>S: `[1, 2, 3]`
+- `4`: push it to S.
+<br>S: `[1, 2, 3, 4]`
+- `+`: we pop two elements from S, `4` and `3`, and apply `+`; the result, `7` is pushed back to S.
+<br>S: `[1, 2, 7]`
+- `*`: we pop `7` and `2` and apply `*`; we push `14` back to S.
+<br>S: `[1, 14]`
+- `+`: we pop `14` and `1` and apply `+`; we push `15` back to S.
+<br>S: `[15]`
+
+And so the final result is `15`, which is correct.
+
+I had much fun with this one, and now I know how to parse arithmetic expressions algorithmically!
 
 ___
 
