@@ -46,32 +46,32 @@ Not happy about this, I decided to learn how it's actually done: the [shunting-y
 
 Once this process is all done, what's left on the execution stack is the result of the evaluation!
 
-My solution defines an `evaluate` function that receives the previously separated list of tokens to evaluate and a dictionary containing the operator precedence rules (each operator is assigned an integer; higher integers indicate higher precedence). Then the only difference between the two parts of the problem is that in Part 1 the operators have equal precedence (`{'+': 0, '*': 0}`), while in Part 2 addition has a higher precedence (`{'+': 1, '*': 0}`)
+My solution defines an `evaluate(tokens, precedence_rules)` function that takes as arguments a previously separated list of tokens and a dictionary containing the operator precedence rules (each operator is assigned an integer; higher integers indicate higher precedence). Then the only difference between the two parts of the problem is that in Part 1 the operators have equal precedence (`{'+': 0, '*': 0}`), while in Part 2 addition has a higher precedence (`{'+': 1, '*': 0}`)
 
-Here's a worked example. Suppose the string is `1 + 2 * (3 + 4)` and that we use the conventional precedence of operators (multiplication before addition). In that case this evaluates to `15`. Tokenization yields `[1, +, *, (, 3, +, 4, )]`. We start with the evaluation stack (call it `Q`) and operator stack (`S`) empty. Then, the algorithm proceeds as follows:
+Here's a worked example. Suppose the string is `1 + 2 * (3 + 4)` and that we apply the Part 2 precedence of operators (i.e. *addition* has precedence over *multiplication*). In that case this evaluates to `21`. Tokenization yields `[1, +, *, (, 3, +, 4, )]`. We start with the evaluation stack (call it `Q`) and operator stack (`S`) empty. Following the algorithm, for each token we do:
 
 - `1`. We push it to Q.
 <br>Q: `[1]`, S: `[]`
 - `+`. S is empty so we just push it to S.
 <br>Q: `[1]`, S: `[+]`
 - `2`. We push it to Q.
-<br>Q: `[1, 2]`, S: `[]`  
-- `*`. We peek the last op in S, which is `+`. Since `*` has higher precedence, we just push `*` to S.
-<br>Q: `[1, 2]`, S: `[+, *]`
+<br>Q: `[1, 2]`, S: `[+]`  
+- `*`. We peek the last op in S, which is `+`. Since `*` has a *lower* precedence, we pop `+` from the stack and push it to Q. We then push `*` to S.
+<br>Q: `[1, 2, +]`, S: `[*]`
 - `(`. We push it to S.
-<br>Q: `[1, 2]`, S: `[+, *, (]`
+<br>Q: `[1, 2, +]`, S: `[*, (]`
 - `3`. We push it to Q.
-<br>Q: `[1, 2, 3]`, S: `[+, *, (]`
+<br>Q: `[1, 2, +, 3]`, S: `[*, (]`
 - `+`. We peek the last op in S, which is `(`. Since it's a parens, we just push `+` to S.
-<br>Q: `[1, 2, 3]`, S: `[+, *, (, +]`
+<br>Q: `[1, 2, +, 3]`, S: `[*, (, +]`
 - `4`. We push it to Q.
-<br>Q: `[1, 2, 3, 4]`, S: `[+, *, (, +]`
+<br>Q: `[1, 2, +, 3, 4]`, S: `[*, (, +]`
 - `)`. We start popping operators from S. We pop `+` and push it to Q. We now pop `(`, which is the matching opening parens, so we stop.
-<br>Q: `[1, 2, 3, 4, +]`, S: `[+, *]`
+<br>Q: `[1, 2, +, 3, 4, +]`, S: `[*]`
 
-We're done with the tokens. S is not empty, so we pop what's left (one at a time from the top!) and push it into Q. The evaluation queue is now a correct RPN expression of the operations to perform:
+We're done processing the tokens. S is not empty, so we pop what's left (one at a time from the top!) and push it into Q. The evaluation queue is now a correct RPN expression of the operations to perform:
 
-- Q: `[1, 2, 3, 4, +, *, +]`
+- Q: `[1, 2, +, 3, 4, +, *]`
 
 To obtain the final result we pop all values from Q and do the operations as indicated above, using a newly initializes execution stack S (we could reuse the operation stack, as it's empty by now):
 
@@ -79,18 +79,18 @@ To obtain the final result we pop all values from Q and do the operations as ind
 <br>S: `[1]`
 - `2`: push it to S.
 <br>S: `[1, 2]`
+- `+`: we pop two elements from S, `1` and `2`, apply `+`, and push the result, `3`, back into S.
+<br>S: `[3]`
 - `3`: push it to S.
-<br>S: `[1, 2, 3]`
+<br>S: `[3, 3]`
 - `4`: push it to S.
-<br>S: `[1, 2, 3, 4]`
-- `+`: we pop two elements from S, `4` and `3`, and apply `+`; the result, `7` is pushed back to S.
-<br>S: `[1, 2, 7]`
-- `*`: we pop `7` and `2` and apply `*`; we push `14` back to S.
-<br>S: `[1, 14]`
-- `+`: we pop `14` and `1` and apply `+`; we push `15` back to S.
-<br>S: `[15]`
+<br>S: `[3, 3, 4]`
+- `+`: we pop `4` and `3`, apply `+`, and push `7` back to S.
+<br>S: `[3, 7]`
+- `*`: we pop `7` and `3`, apply `*`, and push `21` back to S.
+<br>S: `[21]`
 
-And so the final result is `15`, which is correct.
+And so the final result is `21`, which is correct.
 
 I had much fun with this one, and now I know how to parse arithmetic expressions algorithmically!
 
