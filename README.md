@@ -6,11 +6,45 @@ I'll be updating this as a sort of mini blog whenever I can, commenting on the d
 
 You can also check out our fancy [custom private leaderboard](https://meithan.net/AoC20/), with medals awarded to the fastest solvers. See (and download/fork!) the project [here](https://github.com/meithan/AoCBoard).
 
-Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14) - [15](#day15) - [16](#day16) - [17](#day17) - [18](#day18)
+Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14) - [15](#day15) - [16](#day16) - [17](#day17) - [18](#day18) - [19](#day19)
 
 ___
 
-**Day 18**: [Operation Order](https://adventofcode.com/2020/day/18)<a name="day188"></a>
+**Day 19**: [Monster Messages](https://adventofcode.com/2020/day/19)<a name="day19"></a>
+
+1h 2m 16s (#1868) / 2h 4m 43s (#1750) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day19.py)
+
+First of all, let me say this: REGEXES ARE BLACK MAGIC AND WERE PROBABLY INVENTED BY THE DEVIL HIMSELF. This problem was pretty clever, and it showed me yet again the [Unlimited Power™](https://www.youtube.com/watch?v=Sg14jNbBb-8) of regexes.
+
+I spent the first 30 minutes pretty much staring at the problem and thinking of ways to approach it. Should I start from the rules that are a single character and replace them into rules that reference them up to Rule 0, then find a way to see when a message matches them? How do I store the substituted rules compactly? Then at one point I realized, "hey, this is pretty much an actual regex". And then it clicked. Why write the matching code yourself when the regex engine can just do it for you -- and probably *much* more efficiently to boot?
+
+So my solution ended up doing just that. First the rules are parsed from the input into Rule objects that contain references to other rule objects. For instance, in the first example input rule 0 could be represented as `<Rule 0: <Rule 1>, <Rule 2>>` where <Rule #> is an actual reference to a Rule object. This naturally handles recursion.
+
+Then, the key idea is that after loading all the rules we generate the regex corresponding to each one. The regex of any rule if just the concatenation of the regexes of the individual parts, which are either simple strings or other rules -- and when it's other rules we compute *their* regexes then. For instance, the regex of Rule `0: 4 1 5` is `regex(0) = "regex(4)regex(1)regex(5)"`. If the rule has two options, we compute the regex of each, join them with a pipe, and put the result in parens, i.e. `(regex1|regex2)`. An important tweak is to [memoize](https://en.wikipedia.org/wiki/Memoization) things by storing the regex of a rule the first time it's fully computed and then just using that if the rule is encountered again later.
+
+Then the solution is simply to generate the regex for Rule 0, and let the regex engine check how many messages match it. This is the regex for Rule 0 in Part 1:
+
+<pre>(b((b(a(a(a|b)(aa|ba)|b(baa|(aa|ab)b))|b(a(bab|baa)|b(bba|(ab|ba)b)))|a((b((a|b)(a|b)b|((a|b)b|ba)a)|a(a(aa|ab)|b(bb|ba)))b|(((bb|a(a|b))a|(a|b)(a|b)b)a|((bb|(a|b)a)a|((a|b)b|ba)b)b)a))a|(b((((bb|aa)a|bbb)b|((aa|ab)a|(bb|ab)b)a)b|((a(ab|(a|b)a)|b(aa|ab))a|(baa|(aa|ab)b)b)a)|a(b(a(b(aa|ba)|a(ab|(a|b)a))|b(bab|(ab|ba)a))|a(a|b)(a(a|b)(a|b)|bab)))b)|a(b((((aab|bbb)a|((bb|ab)a|(bb|a(a|b))b)b)b|(a(bab|(ab|(a|b)a)a)|b(a(aa|ab)|b(bb|ba)))a)a|(((a|b)(bb|ab)a|bbab)b|((a(bb|a(a|b))|bba)a|((bb|(a|b)a)b|baa)b)a)b)|a(((a((aa|ab)b|aba)|b(a(bb|(a|b)a)|b(bb|a(a|b))))b|(a(baa|(aa|ab)b)|b(bbb|abb))a)a|(b(b(a(ab|(a|b)a)|b(aa|ab))|a(a(aa|ba)|b(bb|(a|b)a)))|a(b(a|b)(bb|ba)|a(a(bb|ba)|bab)))b)))(b((b(a(a(a|b)(aa|ba)|b(baa|(aa|ab)b))|b(a(bab|baa)|b(bba|(ab|ba)b)))|a((b((a|b)(a|b)b|((a|b)b|ba)a)|a(a(aa|ab)|b(bb|ba)))b|(((bb|a(a|b))a|(a|b)(a|b)b)a|((bb|(a|b)a)a|((a|b)b|ba)b)b)a))a|(b((((bb|aa)a|bbb)b|((aa|ab)a|(bb|ab)b)a)b|((a(ab|(a|b)a)|b(aa|ab))a|(baa|(aa|ab)b)b)a)|a(b(a(b(aa|ba)|a(ab|(a|b)a))|b(bab|(ab|ba)a))|a(a|b)(a(a|b)(a|b)|bab)))b)|a(b((((aab|bbb)a|((bb|ab)a|(bb|a(a|b))b)b)b|(a(bab|(ab|(a|b)a)a)|b(a(aa|ab)|b(bb|ba)))a)a|(((a|b)(bb|ab)a|bbab)b|((a(bb|a(a|b))|bba)a|((bb|(a|b)a)b|baa)b)a)b)|a(((a((aa|ab)b|aba)|b(a(bb|(a|b)a)|b(bb|a(a|b))))b|(a(baa|(aa|ab)b)|b(bbb|abb))a)a|(b(b(a(ab|(a|b)a)|b(aa|ab))|a(a(aa|ba)|b(bb|(a|b)a)))|a(b(a|b)(bb|ba)|a(a(bb|ba)|bab)))b)))(a(b(a((a(a((a|b)b|ba)|bba)|b((aa|ba)b|(bb|ba)a))a|((a|b)(bb|a(a|b))b|((bb|(a|b)a)b|baa)a)b)|b((b((ab|ba)a|(bb|aa)b)|a(b(bb|aa)|a(bb|a(a|b))))b|(ba(ab|(a|b)a)|a((bb|ba)a|(a|b)(a|b)b))a))|a((((abb|(ab|ba)a)b|((aa|ab)a|(bb|ab)b)a)b|((a(bb|ba)|b(aa|ba))b|(a(bb|a(a|b))|b(a|b)(a|b))a)a)a|(((aa|ab)(a|b)a|(aab|bbb)b)a|(((bb|aa)b|(bb|ba)a)b|((ab|(a|b)a)a|(ab|ba)b)a)b)b))|b(a(b(aa(aa|ab)a|(b((bb|a(a|b))b|(bb|aa)a)|a(abb|b(bb|ab)))b)|a(b(((bb|ba)a|bbb)b|((aa|ab)b|aba)a)|ab(b(a|b)(a|b)|a(ab|ba))))|b(b(b(((ab|(a|b)a)a|(bb|aa)b)a|(b(aa|ba)|a(ab|(a|b)a))b)|a((bb|a(a|b))(a|b)a|(b((a|b)b|ba)|a(bb|ab))b))|a(a((a|b)(bb|ab)a|(b(bb|ab)|aba)b)|b(a((aa|ba)a|(bb|ba)b)|b(a(ab|ba)|b(bb|(a|b)a)))))))</pre>
+
+Ain't that a mouthful. And Python's regex engine can check whether
+
+`aaabaaabbbaaaababaabbbabbaabababaaababaabbababaabbabbabbaababaaabbabbbababbbbbbaaaababaa`
+
+matches this in a few milliseconds, even with all the branching. Black magic!
+
+Then Part 2 was revealed and again I was staring at the screen for 30 minutes. How the hell could I handle loops, which would result in infinitely long regexes? At one point I did try generating the regex for Rule 0 (after changing rules 8 and 11) and, of course, Python errored out with a "max recursion depth exceeded".
+
+The tip with this kind of infinite things is to expand it manually a few times and see if a pattern emerges. Take Rule 8: `8: 42 | 42 8`. How do we check whether a message matches it? Well, it can match the left option, in which case we'd check if it matches Rule [42](https://www.youtube.com/watch?v=SmanVIJ80EY). Rule 42 doesn't depend on Rules 8 or 11 (directly or indirectly), so *its* regex is just the same as in Part 1. But the message can also match the right option of Rule 8. How does one do that? Well, by matching Rule 42 followed by Rule 8 again -- which is either Rule 42 again or Rule 42 followed by Rule 8 yet again.
+
+Every time we pick the left option we have to match Rule 42 just one more time, but every time we pick the right option we have to recurse into Rule 8 again. So if we choose 'L', Rule 8 is just `42`, if we choose 'RL' then it's `42 42`, if we choose RRL it's `42 42 42`, etc. Rule 8 is just repeating Rule 42 an arbitrary number of times! And a regex can do just that by adding a [single character](https://javascript.info/regexp-quantifiers): `+` ("repeat 1 or more times").
+
+For Rule 11 we follow the same logic. Choosing 'L' yields `42 31`, choosing `RL` yields `42 42 31 31`, `RRL` yields `42 42 42 31 31 31` and so on. Thus, Rule 11 is an arbitrary number of repetitions of Rule 42 followed by *the same number of repetitions* of Rule 31. Initially I tried `regex(42)+regex(31)+`, but this could match a different number of repetitions of the two rules, which would be incorrect. I don't know if there's a way to specify "the *same* number of repetitions as a previous group" in regexes. So in the end I had to write code to manually try a single repetition, then two repetitions, then three and so on. Eventually the expanded regex will be long enough that no message can match it and we can stop there.
+
+Clever problem!
+
+___
+
+**Day 18**: [Operation Order](https://adventofcode.com/2020/day/18)<a name="day18"></a>
 
 29m 37s (#1459) / 1h 7m 56s (#2145) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day18.py)
 
