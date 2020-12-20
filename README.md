@@ -6,7 +6,27 @@ I'll be updating this as a sort of mini blog whenever I can, commenting on the d
 
 You can also check out our fancy [custom private leaderboard](https://meithan.net/AoC20/), with medals awarded to the fastest solvers. See (and download/fork!) the project [here](https://github.com/meithan/AoCBoard).
 
-Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14) - [15](#day15) - [16](#day16) - [17](#day17) - [18](#day18) - [19](#day19)
+Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14) - [15](#day15) - [16](#day16) - [17](#day17) - [18](#day18) - [19](#day19) - [20](#day20)
+
+___
+
+**Day 20**: [Jurassic Jigsaw](https://adventofcode.com/2020/day/20)<a name="day20"></a>
+
+45m 48s (#1033) / 3h 1m 52s (#853) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day20.py)
+
+This is the kind of problem that requires building a bit of infrastructure, but as long as the effort is carried through the results are achieved. And it could've been much harder if the [Creator](https://twitter.com/ericwastl) wanted to torture us, but he is kind.
+
+One first needed to set up code to rotate and/or flip a matrix. In my [original](https://github.com/meithan/AoC20/blob/main/solutions/day20_orig.py) solution I had used [numpy](https://numpy.org/), as it has functions to [rotate](https://numpy.org/doc/stable/reference/generated/numpy.rot90.html) and [flip](https://numpy.org/doc/stable/reference/generated/numpy.flip.html) arrays, but I later re-wrote it in pure Python. Then one needs code to check whether any given two tiles match along one of their sides. There are eight possible orientations of each tile, i.e. elements in the equivalence class of rotations by multiples of 90° and left/right or up/down flips. So to check whether two tiles match, one can take the first tile as-is, and try to match each of the eight orientations of the second tile to each of the four sides of the first.
+
+For Part 1 all that was needed is finding which tiles go in the four corners of the image, and I did that without assembling the whole image. Just go over each tile and determine how many of the other tiles can be matched to it. If there's a unique arrangement of the individual tiles (i.e. every tile only matches those that go next to it in the image), then the corner tiles will be the only ones with only two matching tiles (non-corner edge tiles have three, and all the rest have four). And yup, only four tiles had two matches.
+
+For Part 2 it was now necessary to assemble all the tiles. Again, my solution assumes that there's a unique arrangement. We start with one of the corner tiles (I chose the top-left one, i.e. the tile having matches on the right and bottom edges), find which tile matches to its right, and keep finding right-matching tiles of the one before until we reach the other corner. Then we go down one row, find which tile matches below the first tile in the row above, and complete that row as we did with the first.
+
+Once the tiles are assembled, we take out the edges to build the final image for Part 2 (shown below, with monsters highlighted). Then it's simply a matter of searching for the monster in the image by looking for the '#' in the right positions in 3x20 chunks of the image. And again, we have to do that each of the 8 possible orientations (and only one of them matched any monsters).
+
+Beware; [here be dragons](https://en.wikipedia.org/wiki/Here_be_dragons)!
+
+<img src="https://github.com/meithan/AoC20/blob/main/solutions/day20.png" width="500" />
 
 ___
 
