@@ -22,7 +22,7 @@ For Part 1 all that was needed is finding which tiles go in the four corners of 
 
 For Part 2 it was now necessary to assemble all the tiles. Again, my solution assumes that there's a unique arrangement. We start with one of the corner tiles (I chose the top-left one, i.e. the tile having matches on the right and bottom edges), find which tile matches to its right, and keep finding right-matching tiles of the one before until we reach the other corner. Then we go down one row, find which tile matches below the first tile in the row above, and complete that row as we did with the first.
 
-Once the tiles are assembled, we take out the edges to build the final image for Part 2 (shown below, with monsters highlighted). Then it's simply a matter of searching for the monster in the image by looking for the '#' in the right positions in 3x20 chunks of the image. And again, we have to do that each of the 8 possible orientations (and only one of them matched any monsters).
+Once the tiles are assembled, we take out the edges to build the final image for Part 2 (shown below, with monsters highlighted). Then it's simply a matter of searching all 3x20 chunks of the image for the monster's pattern, by checking if the chunk contains the #s in the right positions (we don't check the "spaces" in the monster's pattern). And again, we have to do this with each of the possible orientations until we find the one that contains monsters.
 
 Beware; [here be dragons](https://en.wikipedia.org/wiki/Here_be_dragons)!
 
