@@ -11,76 +11,28 @@ class Tile:
 
   def __init__(self, _id, grid0):
     self.id = _id
+    self.grid0 = grid0
     self.variant = 0
-    self.grids = self.gen_variants(grid0)
+    self.left = None
+    self.right = None
+    self.top = None
+    self.bottom = None
 
   def __repr__(self):
     return "<{}, {}>".format(self.id, self.variant)
 
-  def show(self, variant=None):
-    if variant is None:
-      variant = self.variant
-    for row in self.get_grid(variant):
-      print(" ".join([str(x) for x in row]))
-
-  # Generate the 8 variants (orientations) of the grid
-  def gen_variants(self, grid0):
-    grids = []
-    grids.append(grid0)
-    g = grid0
-    for i in range(3):
-      g = self.rotate90(g)
-      grids.append(g)
-    g = self.fliplr(grid0)
-    grids.append(g)
-    for i in range(3):
-      g = self.rotate90(g)
-      grids.append(g)
-    return grids
-
-  # Returns the specified variant of the grid, or the 'default' one
   def get_grid(self, variant=None):
     if variant is None:
       variant = self.variant
-    return self.grids[variant]
+    if variant == 0:
+      return self.grid0
+    g = self.grid0
+    for i in range(variant % 4):
+      g = np.rot90(g)
+    if variant >= 4:
+      g = np.fliplr(g)
+    return g
 
-  # Reverses the rows of the grid
-  def reverse_rows(self, grid):
-    N = len(grid[0])
-    new_grid = []
-    for row in grid:
-      new_grid.append([row[len(row)-i-1] for i in range(N)])
-    return new_grid
-
-  # Reverses the column of the grid
-  def reverse_cols(self, grid):
-    N = len(grid[0])
-    new_grid = [[None]*N for i in range(N)]
-    for i in range(N):
-      for j in range(N):
-        new_grid[N-i-1][j] = grid[i][j]
-    return new_grid
-
-  # Transposes the grid
-  def transpose(self, grid):
-    N = len(grid[0])
-    new_grid = [[None]*N for i in range(N)]
-    for i in range(N):
-      for j in range(N):
-        new_grid[i][j] = grid[j][i]
-    return new_grid
-
-  # Rotates the grid counter-clockwise by 90°
-  def rotate90(self, grid):
-    return self.reverse_cols(self.transpose(grid))
-
-  # Flips the grid horizontally (left-right)
-  def fliplr(self, grid):
-    return self.reverse_rows(grid)
-
-  # Checks whether we can match any of the variants of 'other' tile
-  # to any of the edges of this tile
-  # Returns a tuple with the edge matched and the variant (of the other tile)
   def match(self, other):
 
     g1 = self.get_grid()
@@ -91,7 +43,7 @@ class Tile:
       # top
       match = True
       for j in range(10):
-        if g1[0][j] != g2[9][j]:
+        if g1[0,j] != g2[9,j]:
           match = False
           break
       if match:
@@ -100,7 +52,7 @@ class Tile:
       # bottom
       match = True
       for j in range(10):
-        if g1[9][j] != g2[0][j]:
+        if g1[9,j] != g2[0,j]:
           match = False
           break
       if match:
@@ -109,7 +61,7 @@ class Tile:
       # left
       match = True
       for i in range(10):
-        if g1[i][0] != g2[i][9]:
+        if g1[i,0] != g2[i,9]:
           match = False
           break
       if match:
@@ -118,7 +70,7 @@ class Tile:
       # right
       match = True
       for i in range(10):
-        if g1[i][9] != g2[i][0]:
+        if g1[i,9] != g2[i,0]:
           match = False
           break
       if match:
@@ -130,8 +82,11 @@ class Tile:
   def monster_at(self, i0, j0):
     grid = self.get_grid()
     for i,j in monster_pix:
-      if grid[i0+i][j0+j] != "#":
+      if grid[i0+i, j0+j] != 1:
         return False
+    # Found, zero out monster pixels
+    for i,j in monster_pix:
+      grid[i0+i, j0+j] = 0
     return True
 
 # ------------------------------------------------------------------------------
@@ -139,8 +94,6 @@ class Tile:
 if len(sys.argv) == 1:
   sys.argv.append(sys.argv[0].replace(".py", ".in"))
 
-# Read in input and create tiles and their variants
-N = 10
 tiles = {}
 with open(sys.argv[1]) as f:
   while True:
@@ -148,14 +101,15 @@ with open(sys.argv[1]) as f:
     if tile_id == "":
       break
     tile_id = int(tile_id)
-    grid = [[None]*N for i in range(N)]
-    for i in range(N):
+    tile = np.zeros(shape=(10,10), dtype=int)
+    for i in range(10):
       line = f.readline().strip()
-      for j in range(N):
-        # Rows are reversed to have origin at bottom-left
-        grid[N-i-1][j] = line[j]
-    tiles[tile_id] = Tile(tile_id, grid)
+      for j in range(10):
+        tile[10-i-1,j] = 1 if line[j] == '#' else 0
+    tiles[tile_id] = Tile(tile_id, tile)
     line = f.readline()
+
+N = int(sqrt(len(tiles)))
 
 # Define monster, rawr!
 monster_str = [
@@ -199,19 +153,12 @@ print("Part 1:", ans1)
 # Part 2
 
 # Assemble image
-N = int(sqrt(len(tiles)))
 remain = set([x for x in tiles])
-tile_grid = [[None]*N for i in range(N)]
+image1 = [[None]*N for i in range(N)]
 
-tile_grid[0][0] = topleft
-remain.remove(tile_grid[0][0].id)
+image1[0][0] = topleft
+remain.remove(image1[0][0].id)
 
-# Assemble the image by finding matching tiles for all positions
-# Starting with the corner tile, find which tile matches to its right,
-# and keep finding the right-matching tile of the one before until we
-# reach the other corner. Then we go down one row, find which tile matches
-# below the first tile in the row above, and complete that row as we did
-# with the first.
 for ii in range(N):
   for jj in range(N):
 
@@ -219,10 +166,10 @@ for ii in range(N):
       continue
 
     if jj == 0:
-      tile1 = tile_grid[ii-1][jj]
+      tile1 = image1[ii-1][jj]
       direc = "bottom"
     elif jj > 0:
-      tile1 = tile_grid[ii][jj-1]
+      tile1 = image1[ii][jj-1]
       direc = "right"
 
     found = False
@@ -233,16 +180,16 @@ for ii in range(N):
         continue
       if m[0] == direc:
         tile2.variant = m[1]
-        tile_grid[ii][jj] = tile2
+        image1[ii][jj] = tile2
         remain.remove(tile2.id)
         found = True
         break
 
-# Remove borders and assemble actual final image
-grid = [[0]*(8*N) for i in range(8*N)]
+# Remove borders and assemble actual image
+grid = np.zeros(shape=(8*N,8*N), dtype=int)
 for ii in range(N):
   for jj in range(N):
-    g = tile_grid[ii][jj].get_grid()
+    g = image1[ii][jj].get_grid()
     for i in range(8):
       for j in range(8):
         x = ii*8 + i
@@ -250,30 +197,19 @@ for ii in range(N):
         grid[x][y] = g[1+i][1+j]
 image = Tile(0, grid)
 
-# For each variant of the final image, look for the monster
+# For each variant of the image, look for the monster
 for variant in range(8):
   num_monsters = 0
   image.variant = variant
-  monster_coords = []
   for i in range(8*N-3):
     for j in range(8*N-20):
       if image.monster_at(i, j):
-        monster_coords.append((i,j))
         num_monsters += 1
   if num_monsters > 0:
     print("{} monsters found with variant {}".format(num_monsters, variant))
-    # np.savetxt("day20.npy", image.get_grid(), fmt="%d")
-    # print(monster_coords)
     break
 
 # Determine how rough the waters are
-# Each monster has 15 #; we assume no overlap between monster #'s
-roughness = 0
-grid = image.get_grid()
-for i in range(8*N):
-  for j in range(8*N):
-    if grid[i][j] == "#":
-      roughness += 1
-roughness -= num_monsters*15
+roughness = np.sum(image.get_grid())
 
 print("Part 2:", roughness)
