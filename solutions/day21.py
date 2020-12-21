@@ -49,7 +49,7 @@ for a in allergens:
   may_contain = may_contain | ings
 
 # Ingredients not in this set are allergen-free
-allergens_free = [x for x in ingredients if x not in may_contain]
+allergens_free = ingredients - may_contain
 
 # Count how many times each allergen-free ingredient appears
 ans1 = 0
