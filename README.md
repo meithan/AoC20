@@ -6,7 +6,21 @@ I'll be updating this as a sort of mini blog whenever I can, commenting on the d
 
 You can also check out our fancy [custom private leaderboard](https://meithan.net/AoC20/), with medals awarded to the fastest solvers. See (and download/fork!) the project [here](https://github.com/meithan/AoCBoard).
 
-Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14) - [15](#day15) - [16](#day16) - [17](#day17) - [18](#day18) - [19](#day19) - [20](#day20)
+Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14) - [15](#day15) - [16](#day16) - [17](#day17) - [18](#day18) - [19](#day19) - [20](#day20) - [21](#day21)
+
+___
+
+**Day 21**: [Jurassic Jigsaw](https://adventofcode.com/2020/day/21)<a name="day21"></a>
+
+25m 19s (#817) / 35m 24s (#869) - [code](https://github.com/meithan/AoC21/blob/main/solutions/day21.py)
+
+Albeit the problem is quite sample it did take me like 15 minutes to actually understand the problem statement and how the allergen-free ingredients were determined in the example. Once I understood the example coding the solution to both parts was relatively easy.
+
+I made good use of [Python sets](https://docs.python.org/3/library/stdtypes.html#set) in this problem: the `&`, `|` and `-` operators mean intersection, union and difference, respectively, when applied to sets. To see which ingredients could contain a given allergen all we have to do is make the intersection of all the ingredient lists that may contain that allergen. Then the set of all possibly allergen-containing ingredients is the union of all these sets, and the set of all allergen-free ingredients is the difference between the set of all ingredients and that. Counting the allergen-free ingredients then solved Part 1.
+
+For Part 2 I followed an elimination process similar to [Day 16](#day16). We go over the sets of ingredients possibly containing an allergen; if that set has a single option, we know that this ingredient contains that allergen, and we can cross it out from the possible sets of all other allergens. Continuing this process we eventually narrow down all allergens to a single ingredient and we're done.
+
+Four more problems to go!
 
 ___
 
