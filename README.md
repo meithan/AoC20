@@ -10,7 +10,7 @@ Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](
 
 ___
 
-**Day 21**: [Jurassic Jigsaw](https://adventofcode.com/2020/day/21)<a name="day21"></a>
+**Day 21**: [Allergen Assessment](https://adventofcode.com/2020/day/21)<a name="day21"></a>
 
 25m 19s (#817) / 35m 24s (#869) - [code](https://github.com/meithan/AoC21/blob/main/solutions/day21.py)
 
