@@ -18,6 +18,13 @@ Albeit the problem is quite sample it did take me like 15 minutes to actually un
 
 I made good use of [Python sets](https://docs.python.org/3/library/stdtypes.html#set) in this problem: the `&`, `|` and `-` operators mean intersection, union and difference, respectively, when applied to sets. To see which ingredients could contain a given allergen all we have to do is make the intersection of all the ingredient lists that may contain that allergen. Then the set of all possibly allergen-containing ingredients is the union of all these sets, and the set of all allergen-free ingredients is the difference between the set of all ingredients and that. Counting the allergen-free ingredients then solved Part 1.
 
+As to *why* the set intersections reveal the allergen-free ingredients, here's the explanation. Consider the following two lines of the sample input, which are the only that list the allergen fish:
+
+<pre>mxmxvkd kfcds sqjhc nhms (contains dairy, fish)
+sqjhc mxmxvkd sbzzf (contains fish)</pre>
+
+The first line says that the (one and only) ingredient containing fish *must be* one of `mxmxvkd kfcds sqjhc nhms`, while the second that it must be one of `sqjhc mxmxvkd sbzzf`. Since `sbzzf`, `kfcds` `sqjhc` and `nhms` appear in one list but not the other, none of those can be the ingredient that contains fish (it would have to appear in both lists). The set intersection (`mxmxvkd sqjhc`) precisely excludes these, leaving only the ingredients that might contain fish. Do this for all allergens, and the ingredients not present in any of the resulting sets are necessarily those allergen-free.
+
 For Part 2 I followed an elimination process similar to [Day 16](#day16). We go over the sets of ingredients possibly containing an allergen; if that set has a single option, we know that this ingredient contains that allergen, and we can cross it out from the possible sets of all other allergens. Continuing this process we eventually narrow down all allergens to a single ingredient and we're done.
 
 Four more problems to go!
