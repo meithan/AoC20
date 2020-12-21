@@ -44,8 +44,7 @@ with open(sys.argv[1]) as f:
 # Determine the set of all ingredients that may contain an allergen
 # By just making the union of all the sets of possibles
 may_contain = set()
-for a in allergens:
-  ings = allergens[a]
+for ings in allergens.values():
   may_contain = may_contain | ings
 
 # Ingredients not in this set are allergen-free
