@@ -1,5 +1,6 @@
 # Day 21: Allergen Assessment
 
+from functools import reduce
 import re
 import sys
 
@@ -12,7 +13,7 @@ if len(sys.argv) == 1:
 ing_lists = []
 # Just all the different ingredients
 ingredients = set()
-# Dict with alergen: <list of ingredients possibly containing it>
+# Dict with allergen: <list of ingredients possibly containing it>
 allergens = {}
 
 with open(sys.argv[1]) as f:
@@ -31,7 +32,7 @@ with open(sys.argv[1]) as f:
       ingredients.add(ing)
 
     # For each allergen, we compute the intersection of the set of the
-    # possible ingredientes previously saved and the new set of possibles
+    # possible ingredients previously saved and the new set of possibles
     for a in allergs:
       if a not in allergens:
         allergens[a] = set(ings)
@@ -41,11 +42,9 @@ with open(sys.argv[1]) as f:
 # ------------------------------------
 # Part 1
 
-# Determine the set of all ingredients that may contain an allergen
-# By just making the union of all the sets of possibles
-may_contain = set()
-for ings in allergens.values():
-  may_contain = may_contain | ings
+# The set of all ingredients that may contain an allergen is the union
+# of the sets of possible ingredients containing each allergen
+may_contain = reduce(lambda x,y: x | y, allergens.values())
 
 # Ingredients not in this set are allergen-free
 allergens_free = ingredients - may_contain
@@ -74,7 +73,7 @@ while True:
   if all(len(allergens[a])==0 for a in allergens):
     break
 
-# Sort the list ingredientes by allergen, build the answer
+# Sort the list ingredients by allergen, build the answer
 dangerous = [(solutions[a], a) for a in solutions]
 dangerous.sort(key=lambda x: x[1])
 ans2 = ",".join([x[0] for x in dangerous])
