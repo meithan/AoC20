@@ -395,7 +395,7 @@ and the junction points are `1->4`, `7->10`, `12->15`, `16->19` and `19->22`; al
 
 Graphically, this looks like this:
 
-![graph](day10_viz.png)
+![graph](https://github.com/meithan/AoC20/blob/main/solutions/day10_viz.png)
 
 So, the strategy is to use the graph traversal algorithm to compute the number of paths *within each sub-problem* --which are, hopefully, much smaller than the whole problem and thus much faster to solve, which turned out to the case-- and multiply the results together. Then that is the answer. This is a [divide-and-conquer](https://en.wikipedia.org/wiki/Divide-and-conquer_algorithm) strategy.
 
@@ -441,7 +441,7 @@ ___
 
 This one was a bit more difficult than previous problems. The relationships between the bag types (color), i.e. which bags hold which bags, can be represented as a weighted [directed graph](https://en.wikipedia.org/wiki/Directed_graph). For the test input provided in the problem statement this looks like this (plotted with [networkx](https://networkx.org/), code [here](https://github.com/meithan/AoC20/blob/main/solutions/day07_viz.py)):
 
-![graph](day07_test1.png)
+![graph](https://github.com/meithan/AoC20/blob/main/solutions/day07_test1.png)
 
 Directed edges point from a bag type to the bag types it contains, and weights indicate the number of contained bags of that type.
 
