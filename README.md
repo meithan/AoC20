@@ -12,7 +12,7 @@ ___
 
 **Day 22**: [Crab Combat](https://adventofcode.com/2020/day/22)<a name="day22"></a>
 
-18m 0s (#2401) / 2h 13m 14s (#3357) - [code](https://github.com/meithan/AoC21/blob/main/solutions/day22.py)
+18m 0s (#2401) / 2h 13m 14s (#3357) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day22.py)
 
 Not a complicated problem, just a matter of carefully reading the statement and directly implementing what is specified. I keep spending way too long deciding what data structures to use. But what was frustrating is that it took me *over an hour* to debug my solution for Part 2, which ended up being a tiny, subtle error (not helped by the fact that the sample input does not exhibit the problem, so my solution returned the correct answer for it).
 
@@ -28,7 +28,7 @@ ___
 
 **Day 21**: [Allergen Assessment](https://adventofcode.com/2020/day/21)<a name="day21"></a>
 
-25m 19s (#817) / 35m 24s (#869) - [code](https://github.com/meithan/AoC21/blob/main/solutions/day21.py)
+25m 19s (#817) / 35m 24s (#869) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day21.py)
 
 Albeit the problem is quite sample it did take me like 15 minutes to actually understand the problem statement and how the allergen-free ingredients were determined in the example. Once I understood the example coding the solution to both parts was relatively easy.
 
