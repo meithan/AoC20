@@ -16,9 +16,9 @@ ___
 
 Not a complicated problem, just a matter of carefully reading the statement and directly implementing what is specified. I keep spending way too long deciding what data structures to use. But what was frustrating is that it took me *over an hour* to debug my solution for Part 2, which ended up being a tiny, subtle error (not helped by the fact that the sample input does not exhibit the problem, so my solution returned the correct answer for it).
 
-I used a double-ended queue (a "deque", [`collections.deque`](https://docs.python.org/3/library/collections.html#collections.deque)) to represent each player's deck of cards. This is a natural structure to handle the process of taking cards off the top and placing them back on the bottom, as it has O(1) pop and add operations on both ends (hence "double-ended"). It also has a convenient copy method (and I believe that iterating over the whole deque in order, which is necessary in building a copy, is O(n)), which is necessary for Part 2.
+I used a double-ended queue (a "deque", [`collections.deque`](https://docs.python.org/3/library/collections.html#collections.deque)) to represent each player's deck of cards. This is a natural data structure to represent the process of taking cards off the top and placing them back on the bottom of a deck, as it has O(1) pop and add operations on both ends (hence "double-ended"). It also has a convenient copy method (most likely O(n), so as fast as a list), which is necessary for Part 2.
 
-This handles Part 1 nicely. But I lost some time getting the first star because I initially wasn't always placing the two cards back on the winner's deck in the correct order. Grrr.
+Not much else needed to solve Part 1. But I lost some time getting the first star because I initially wasn't always placing the two cards back on the winner's deck in the correct order. Grrr.
 
 For Part 2 I used a [set](https://docs.python.org/3/library/stdtypes.html#set-types-set-frozenset) to save the past states of the game, because of its O(1) membership checks. The state identifier that is added to the set is built by turning the players' decks into tuples (lists can't be used since they're not [hashable](https://docs.python.org/3.1/glossary.html?highlight=hashable)) and concatenating the two: `state = tuple(deck1) + tuple(deck2)`.
 
