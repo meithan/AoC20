@@ -6,7 +6,23 @@ I'll be updating this as a sort of mini blog whenever I can, commenting on the d
 
 You can also check out our fancy [custom private leaderboard](https://meithan.net/AoC20/), with medals awarded to the fastest solvers. See (and download/fork!) the project [here](https://github.com/meithan/AoCBoard).
 
-Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14) - [15](#day15) - [16](#day16) - [17](#day17) - [18](#day18) - [19](#day19) - [20](#day20) - [21](#day21)
+Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14) - [15](#day15) - [16](#day16) - [17](#day17) - [18](#day18) - [19](#day19) - [20](#day20) - [21](#day21) - [22](#day22)
+
+___
+
+**Day 22**: [Crab Combat](https://adventofcode.com/2020/day/22)<a name="day22"></a>
+
+18m 0s (#2401) / 2h 13m 14s (#3357) - [code](https://github.com/meithan/AoC21/blob/main/solutions/day22.py)
+
+Not a complicated problem, just a matter of carefully reading the statement and directly implementing what is specified. I keep spending way too long deciding what data structures to use. But what was frustrating is that it took me *over an hour* to debug my solution for Part 2, which ended up being a tiny, subtle error (not helped by the fact that the sample input does not exhibit the problem, so my solution returned the correct answer for it).
+
+I used a double-ended queue (a "deque", [`collections.deque`](https://docs.python.org/3/library/collections.html#collections.deque)) to represent each player's deck of cards. This is a natural structure to handle the process of taking cards off the top and placing them back on the bottom, as it has O(1) pop and add operations on both ends (hence "double-ended"). It also has a convenient copy method (and I believe that iterating over the whole deque in order, which is necessary in building a copy, is O(n)), which is necessary for Part 2.
+
+This handles Part 1 nicely. But I lost some time getting the first star because I initially wasn't always placing the two cards back on the winner's deck in the correct order. Grrr.
+
+For Part 2 I used a [set](https://docs.python.org/3/library/stdtypes.html#set-types-set-frozenset) to save the past states of the game, because of its O(1) membership checks. The state identifier that is added to the set is built by turning the players' decks into tuples (lists can't be used since they're not [hashable](https://docs.python.org/3.1/glossary.html?highlight=hashable)) and concatenating the two: `state = tuple(deck1) + tuple(deck2)`.
+
+And this is where my bug lies. For consider the following two pairs of decks: `[1,2,3] and [4,5]` and `[1,2] and [3,4,5]`. These are clearly two different game states, but built as above the state will be the same: `(1,2,3,4,5)`. That is, it doesn't distinguish where the cards from one player end and those of the other start. It took me an hour of manually going over of the steps of the game to finally spot that my code was incorrectly ending some sub-games. Finding this was complicated by the fact that the original code works for the sample input, as none of the sub-games ends by repetition.
 
 ___
 
