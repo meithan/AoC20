@@ -6,9 +6,92 @@ I'll be updating this as a sort of mini blog whenever I can, commenting on the d
 
 You can also check out our fancy [custom private leaderboard](https://meithan.net/AoC20/), with medals awarded to the fastest solvers. See (and download/fork!) the project [here](https://github.com/meithan/AoCBoard).
 
-Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14) - [15](#day15) - [16](#day16) - [17](#day17) - [18](#day18) - [19](#day19) - [20](#day20) - [21](#day21) - [22](#day22)
+Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14) - [15](#day15) - [16](#day16) - [17](#day17) - [18](#day18) - [19](#day19) - [20](#day20) - [21](#day21) - [22](#day22) - [23](#day23)
 
-___
+---
+
+**Day 23**: [Crab Cups](https://adventofcode.com/2020/day/23)<a name="day23"></a>
+
+39m 23s (#1532) / 1h 29m 53s (#957) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day23.py)
+
+Had a lot of fun with this one. I just love linked lists for some reason I can't fathom and jump at every opportunity of using them.
+
+Since the Part 1 input and number of iterations are small I figured I'd go with the fast & dumb solution, so I solved it with normal lists and circular indexing. My solution copies the three cups to be removed to a temporary list, determines where they should go (by checking if successive places/cups are on the list or not -- it's just three elements, so no need for a set here), and then re-builds the *whole list* of cups inserting the removed items after the destination cup is encountered. Re-building the whole list sounds stupid, but even using slicing or some other strategy, as long as the underlying structure is a simple list inserting items at arbitrary positions implies shifting all the items that follow it, and is thus an [O(n) operation](https://wiki.python.org/moin/TimeComplexity) on average.
+
+A very inefficient solution, but fast enough to solve Part 1. I measured the execution time with the larger Part 2 input and it takes about 4.5 seconds to do 100 moves. Extrapolate that to 10 million moves and it would take this solution about 125 hours to complete! Clearly impractical. As I was writing the dumb solution for Part 1, I was already thinking ahead on how to write it more efficiently with a linked list. But it had been some time since I'd last coded a linked list and there's some infrastructure that needs to be set up which I remember could be tricky to get right, so I figured not to risk it and just finish the dumb solution. But in hindsight it might've been just as fast to code the linked list from the start.
+
+Anyway, here's how the linked list solution works and why it's tremendously faster. No messing with indexing at all either. Each cup is a node in a [linked list](https://en.wikipedia.org/wiki/Linked_list), which means it has two properties: a `label` identifying it (the cup's label), and a link to the `next` node (cup) in the list (with `None` when it's not linked to anything yet):
+
+```Python
+Class Cup:
+  def __init__(self, label):
+    self.label = label
+    self.next = None
+```
+
+When we load the input we create `Cup` objects for each cup, and link them the next cup as we go. We make the last cup point back to the first to make the list circular. Using the sample input, `389125467`, this can be represented as follows, with the first value of each node being the node's label and the second a reference (another `Cup` object) to the next node:
+
+<pre>[3|8] -> [8|9] -> [9|1] -> [1|2] -> [2|5] -> [5|4] -> [4|6] -> [6|7] -> [7|3] -> back to 3</pre>
+
+For this problem we needed the linked list to support two operations.
+
+(1) Removing the N nodes that are after a given node (I called it an N-length "chain"). We do this by cutting the head of the N nodes (it could've been hard-wired to 3 as the problem requires, but doing it for N is just as simple) that are after the current node, reconnect the given node to the list, and return the head and tail of the chain (so that we can reconnect it later):
+
+```python
+def cut_chain(self, N):
+  head = self.next
+  tail = head
+  for i in range(N-1):
+    tail = tail.next
+  self.next = tail.next
+  tail.next = None
+  return (head, tail)
+```
+
+For instance, in the first move in the example we remove the three cups following the first cup (3). We first sever the chain to be removed:
+
+<pre>list: [3|x]    [2|5] -> [5|4] -> [4|6] -> [6|7] -> [7|3] -> back to 3
+chain: [8|9] -> [9|1] -> [1|x]</pre>
+
+and join the main list back, saving the head and tail of the chain (we don't need and don't want to save references to any of the intermediate nodes in the chain!):
+
+<pre>list: [3|2] -> [2|5] -> [5|4] -> [4|6] -> [6|7] -> [7|3] -> back to 3
+chain: [8|9] -> [9|1] -> [1|x]
+head: [8|9]
+tail: [1|x]
+</pre>
+
+(2) Inserting a chain after a given node, by disconnecting the given node from the next (but remembering where it was connected to -- this is important!), connecting it to the head of the chain, and then connecting the tail of the chain to the node originally after the given node.
+
+```python
+def insert_chain(self, head, tail):
+  old_next = self.next
+  self.next = head
+  tail.next = old_next
+```
+
+Continuing with the example, after we've determined that the removed cups must be placed after cup 2:
+
+<pre>
+list: [3|2] -> [2|5] -> [5|4] -> [4|6] -> [6|7] -> [7|3] -> back to 3
+insert [8|9] -> [9|1] -> [1|x] after [2|5]:
+1. [3|2] -> [2|x]    [5|4] -> [4|6] -> [6|7] -> [7|3] -> back to 3
+2. [3|2] -> [2|8] -> [8|9] -> [9|1] -> [1|x]    [5|4] -> [4|6] -> [6|7] -> [7|3] -> back to 3
+3. [3|2] -> [2|8] -> [8|9] -> [9|1] -> [1|5] -> [5|4] -> [4|6] -> [6|7] -> [7|3] -> back to 3</pre>
+
+And that's all we need the linked list to do. What's crucial is that time needed to carry any of these operations is independent of the length of the list, since we're re-wiring just a few references of a few nodes at the point of removal/insertion -- i.e. both operations are O(1). It doesn't matter if the list has 10 elements or 1 million, the time to do this will be the same! (Removing the chain does scale with the length of the *chain* --since we have to walk the chain to get to the tail-- but not with that of the list.)
+
+The final relevant detail is that to insert the removed chain back we need to locate the destination node (i.e. obtain a reference to it) in the first place. The one thing linked lists are bad at is random access: obtaining the N-th node after a given is an O(n) operation, as we have to walk the linked list until we reach it (unlike a list, where random access is O(1) -- we just add N to the index and directly access the element at that position). Albeit the problem is a bit different here, since we need to find the element by its *value*, not its position in the list. Finding something by value in a list is also O(n). This is just impractical with a big list.
+
+In both cases, the solution is simple: I used a dictionary to hold direct references to all the individual nodes, keyed by their labels. Once we determine the label of the destination node (which can't take more than three tries, per the rules), we can get a reference to it in ([amortized](https://en.wikipedia.org/wiki/Amortized_analysis)) O(1) time, and instantly "jump" to the point where were have to insert the chain. And yes, building the dictionary with one million items is time consuming (and takes a bit of memory), but we only do it once at the beginning.
+
+With all of this, the linked list solution takes about 85 *microseconds* to do 100 moves (with the one million element list of Part 2), and about 13 seconds to complete the 10 million moves (it doesn't scale *exactly* directly because, I suspect, of the occasional collisions in the dictionary lookups -- remember that hash maps lookups are *amortized* O(1), so some lookups will occasionally take much longer ... but it's still very close to linear).
+
+One thing to note about this problem is that I can't readily see any other way of solving it efficiently without the use of a linked list (like a clever shortcut that makes it unnecessary to simulate all 10 million moves). So anyone not knowing about linked lists will have a tough time solving it. But here's a chance to learn about them -- they fantastic tools for some jobs!
+
+Almost done with AoC this year!
+
+---
 
 **Day 22**: [Crab Combat](https://adventofcode.com/2020/day/22)<a name="day22"></a>
 
