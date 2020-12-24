@@ -30,7 +30,7 @@ def plot(blacks):
   # plt.title(gen)
   plt.xlim(-L, L)
   plt.ylim(-L, L)
-  # plt.axis("off")
+  plt.axis("off")
 
 # ----------------------------------------
 
