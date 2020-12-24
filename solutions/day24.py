@@ -44,6 +44,7 @@ for inst_list in inst_lists:
     blacks.remove(pos)
   else:
     blacks.add(pos)
+start_blacks = blacks.copy()
 
 ans1 = len(blacks)
 
