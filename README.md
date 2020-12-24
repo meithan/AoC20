@@ -6,7 +6,28 @@ I'll be updating this as a sort of mini blog whenever I can, commenting on the d
 
 You can also check out our fancy [custom private leaderboard](https://meithan.net/AoC20/), with medals awarded to the fastest solvers. See (and download/fork!) the project [here](https://github.com/meithan/AoCBoard).
 
-Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14) - [15](#day15) - [16](#day16) - [17](#day17) - [18](#day18) - [19](#day19) - [20](#day20) - [21](#day21) - [22](#day22) - [23](#day23)
+Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14) - [15](#day15) - [16](#day16) - [17](#day17) - [18](#day18) - [19](#day19) - [20](#day20) - [21](#day21) - [22](#day22) - [23](#day23) - [24](#day24)
+
+---
+
+**Day 24**: [Lobby Layout](https://adventofcode.com/2020/day/24)<a name="day24"></a>
+
+28m 32s (#1682) / 49m 5s (#1358) - [code](https://github.com/meithan/AoC20/blob/main/solutions/day24.py)
+
+Ah, hex grids. Those are always fun. I remember working with them in [Day 11](https://adventofcode.com/2017/day/11) of the 2017 AoC edition. There are many ways to assign a coordinate system to a hex grid, none so obvious as Cartesian coordinates. I don't remember which system I used back then, but this time I quickly scribbled a system that worked (see diagram below). Someone posted on reddit this [incredibly detailed and beautifully illustrated guide to hex grids](https://www.redblobgames.com/grids/hexagons/) -- bookmarked! My coordinate system is a variant of the one called "axial" on that guide:
+
+<div style="text-align:center"><img src="https://github.com/meithan/AoC20/blob/main/solutions/day24_diagram.png" width="400" /></div>
+
+Moving along the `e-w` and `ne-sw` axes adds or subtracts one to a single coordinate, but moving along the `nw-se` axis changes both coordinates (in opposite ways). This makes it easy to find the coordinates of the neighbors of a given hex (required in both parts of the problem). But it has the disadvantage that computing distances between two hexes is not so obvious (a [Manhattan-type](https://en.wikipedia.org/wiki/Taxicab_geometry) distance works for the first two axes, but not for the third one), but the problem didn't require computing distances.
+
+Part 1 was just a matter of "walking" the hex grid from the origin for each line of the input, adding the final hex (coordinates) to the set of black hexagons at the end of each walk, or removing it from the set if it is already present (thus flipping the hex back to white, which we don't keep track of).
+
+For Part 2 we needed to implement a [cellular automaton](https://en.wikipedia.org/wiki/Cellular_automaton), starting from the state that resulted from Part 1. I wrote an efficient algorithm for this in [Day 17](https://github.com/meithan/AoC20/blob/main/solutions/day17.py), so I just reused the same ideas: we only keep track of the black hexagons, each gen we build a dict with counts of their neighboring hexes, and determine "seed" hexagons (white hexes that will turn black) along the way. This solves Part 2 in under a second. The final configuration is shown below. Unlike [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life), this cellular automaton does not produce particularly interesting patterns.
+
+The last problem unlocks tonight!
+
+<div style="text-align:center"><img src="https://github.com/meithan/AoC20/blob/main/solutions/day24.png" width="800" /></div>
+
 
 ---
 
