@@ -6,7 +6,21 @@ I'll be updating this as a sort of mini blog whenever I can, commenting on the d
 
 You can also check out our fancy [custom private leaderboard](https://meithan.net/AoC20/), with medals awarded to the fastest solvers. See (and download/fork!) the project [here](https://github.com/meithan/AoCBoard).
 
-Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14) - [15](#day15) - [16](#day16) - [17](#day17) - [18](#day18) - [19](#day19) - [20](#day20) - [21](#day21) - [22](#day22) - [23](#day23) - [24](#day24)
+Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](#day6) - [7](#day7) - [8](#day8) - [9](#day9) - [10](#day10) - [11](#day11) - [12](#day12) - [13](#day13) - [14](#day14) - [15](#day15) - [16](#day16) - [17](#day17) - [18](#day18) - [19](#day19) - [20](#day20) - [21](#day21) - [22](#day22) - [23](#day23) - [24](#day24) - [25](#day25)
+
+---
+
+**Day 25**: [Combo Breaker](https://adventofcode.com/2020/day/25)<a name="day25"></a>
+
+10h 13m 43s (#9204) / 10h 17m 57s (#6963) <sub>(I solved it in the morning)</sub> - [code](https://github.com/meithan/AoC20/blob/main/solutions/day25.py)
+
+The final problem turned out to be quite easy, since the problem statement basically told you how to solve it. But as I was reading it initially I got really worried, as the problem is basically breaking the [Diffie-Hellman key exchange protocol](https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange), which is a strong cryptographic key exchange method that is ubiquitous in today's secure internet communication (your browser most likely used a variant of it to connect to Github to open this page!). But using a relatively small modulo `p`, though, makes it breakable by brute force.
+
+Let `ckey` and `dkey` be the card and door "public keys", respectively, with the two other fixed numbers in the problem being `g=7` and `p=20201227`. The "transform" process of successively multiplying a value starting at 1 by a "subject number" and taking the result modulo `p` is just the direct (and slow -- there are [faster methods](https://en.wikipedia.org/wiki/Exponentiation_by_squaring)) method of computing [modular exponentiation](https://en.wikipedia.org/wiki/Modular_exponentiation) of that subject number. So the problem is to first find the "loop-size" `x` such that `g^x (mod p) = key`, where `key` is ither `ckey` or `dkey`. Since `p` isn't that big (and for *reasons*), we can just brute-force this: try `g^1 (mod p)`, then `g^2 (mod p)`, and so on until the result is the chosen key. Once this is done, we just compute `x^other_key (mod p)` and that is the sought "encryption key" and solution to the problem.
+
+And, as usual, there is no Part 2. That means I've completed the 2020 edition of Advent of Code! Yay! Big thanks to [Eric Wastl](https://twitter.com/ericwastl) and collaborators for setting this up for us, it was a ton of fun! I'll see you for the 2021 edition.
+
+<img src="https://github.com/meithan/AoC20/blob/main/completed.png" width="400" />
 
 ---
 
