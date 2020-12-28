@@ -10,6 +10,16 @@ Go to day: [1](#day1) - [2](#day2) - [3](#day3) - [4](#day4) - [5](#day5) - [6](
 
 ---
 
+I completed Advent of Code 2020! Big thanks to [Eric Wastl](https://twitter.com/ericwastl) and team for setting this up for us, it was a ton of fun! I'll see you for the 2021 edition.
+
+<img src="https://github.com/meithan/AoC20/blob/main/completed.png" width="600" />
+
+Here's a plot of my solve times (measured from the time I started working on the problem).
+
+<img src="https://github.com/meithan/AoC20/blob/main/solve_times.png" width="100%" />
+
+---
+
 **Day 25**: [Combo Breaker](https://adventofcode.com/2020/day/25)<a name="day25"></a>
 
 10h 13m 43s (#9204) / 10h 17m 57s (#6963) <sub>(I solved it in the morning)</sub> - [code](https://github.com/meithan/AoC20/blob/main/solutions/day25.py)
@@ -18,9 +28,7 @@ The final problem turned out to be quite easy, since the problem statement basic
 
 Let `ckey` and `dkey` be the card and door "public keys", respectively, with the two other fixed numbers in the problem being `g=7` and `p=20201227`. The "transform" process of successively multiplying a value starting at 1 by a "subject number" and taking the result modulo `p` is just the direct (and slow) way of computing the [modular exponentiation](https://en.wikipedia.org/wiki/Modular_exponentiation) of that subject number (there are [faster methods](https://en.wikipedia.org/wiki/Exponentiation_by_squaring)). So the problem is to first find the "loop-size" `x` such that `g^x (mod p) = key`, where `key` is either `ckey` or `dkey`. Since `p` isn't that big (and for number theory *reasons*), we can just brute-force this: try `g^1 (mod p)`, then `g^2 (mod p)`, and so on until the result is the chosen key. Once this is done, we just compute `x^other_key (mod p)` and that is the sought "encryption key" and solution to the problem.
 
-And, as usual, there is no Part 2. That means I've completed the 2020 edition of Advent of Code! Yay! Big thanks to [Eric Wastl](https://twitter.com/ericwastl) and collaborators for setting this up for us, it was a ton of fun! I'll see you for the 2021 edition.
-
-<img src="https://github.com/meithan/AoC20/blob/main/completed.png" width="600" />
+And, as usual, there is no Part 2. That means I've completed the 2020 edition of Advent of Code! Yay!
 
 ---
 
